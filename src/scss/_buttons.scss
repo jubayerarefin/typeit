@@ -1,0 +1,18 @@
+.button {
+	border: 1px solid $pink;
+    padding: 1.25rem 3rem;
+    border-radius: .5rem;
+    color: $pink;
+    display: inline-block;
+
+    &:hover {
+    	background: $pink;
+    	color: white;
+    }
+
+    .setup-block & {
+    	@media screen and (max-width: 992px) {
+	      	margin-bottom: 1rem;
+	    }
+    }
+}
