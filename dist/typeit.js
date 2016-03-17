@@ -29,7 +29,8 @@
       startDelay: 250,
       loop: false,
       loopDelay: 750,
-      html: true 
+      html: true ,
+      autoStart: true
      };
 
     t.dd = {
@@ -43,7 +44,8 @@
       startDelay: e.data('typeitStartdelay'),
       loop: e.data('typeitLoop'),
       loopDelay: e.data('typeitLoopdelay'),
-      html: e.data('typeitHtml')
+      html: e.data('typeitHtml'),
+      autoStart: e.data('typeitAutostart')
     };
 
     t.s = $.extend({}, t.d, o, t.dd);
@@ -57,11 +59,11 @@
  var p = $.fn.typeIt.tClass.prototype;
 
  p.init = function(t){
-  t.CI = 0;
+  t.characterIndex = 0;
   t.SEI = 0; 
-  t.SI = 0; 
-  t.SA = []; 
-  t.BD = t.s.breakDelay;
+  t.stringIndex = 0; 
+  t.stringArray = []; 
+  t.breakDelay = t.s.breakDelay;
   t.span = '<span style="display:inline-block;width:0;height:0;overflow:hidden;">_</span>';
 
   t.toArr(t);
@@ -71,10 +73,12 @@
   t.tel = t.el.find('span');
   t.insert = function(c) { t.tel.append(c); };
 
-  t.cursor(t);
-  t.to(function() {
-    t.type(t);
-  }.bind(t), t.s.startDelay);
+  if(t.s.autoStart) {
+    t.cursor(t);
+    t.to(function() {
+      t.type(t);
+    }.bind(t), t.s.startDelay);
+  }
  };
 
   p.valCB = function(t) {
@@ -95,7 +99,7 @@
 
   p.toArr = function(t) {
     var s = t.s.strings;
-    t.SA = s.constructor === Array ? s.slice(0) : s.split('<br>');
+    t.stringArray = s.constructor === Array ? s.slice(0) : s.split('<br>');
   };
 
   p.cursor = function(t) {
@@ -116,8 +120,8 @@
   */
   p.rake = function(t) {
 
-    for(var i = 0; i < t.SA.length; i++) {
-      t.SA[i] = t.SA[i].split('');
+    for(var i = 0; i < t.stringArray.length; i++) {
+      t.stringArray[i] = t.stringArray[i].split('');
 
       if(t.s.html) {
         t.tPos = [];
@@ -125,18 +129,18 @@
         t.SEI = 0;
         var tag;
         var en = false;
-        for(var j = 0; j < t.SA[i].length; j++) {
+        for(var j = 0; j < t.stringArray[i].length; j++) {
 
-          if(t.SA[i][j] === '<' || t.SA[i][j] === '&') {
+          if(t.stringArray[i][j] === '<' || t.stringArray[i][j] === '&') {
             p[0] = j;
-            en = t.SA[i][j] === '&' ? true : false;
+            en = t.stringArray[i][j] === '&' ? true : false;
           }
 
-          if(t.SA[i][j] === '>' || (t.SA[i][j] === ';' && en)) {
+          if(t.stringArray[i][j] === '>' || (t.stringArray[i][j] === ';' && en)) {
             p[1] = j;
             j = 0;
-            tag = (t.SA[i].slice(p[0], p[1]+1)).join('');
-            t.SA[i].splice(p[0], (p[1]-p[0]+1), tag);
+            tag = (t.stringArray[i].slice(p[0], p[1]+1)).join('');
+            t.stringArray[i].splice(p[0], (p[1]-p[0]+1), tag);
             en = false;
           }
         }
@@ -151,45 +155,45 @@
   };
 
   p.type = function(t){
-    t.curStr = t.SA[t.SI];
+    t.curStr = t.stringArray[t.stringIndex];
     var csLen = t.curStr.length;
-    var saLen = t.SA.length;
+    var saLen = t.stringArray.length;
     t.tTO = t.to(function () {
       t.random(t);
-      var chr = t.SA[t.SI][t.CI];
+      var chr = t.stringArray[t.stringIndex][t.characterIndex];
       if(chr.indexOf('<') !== -1 && chr.indexOf('</') === -1 && t.s.html){
         t.makeNode(t, chr);
       }
       t.print(t, chr);
-      t.CI++;
+      t.characterIndex++;
 
       // More chars to be typed.
-      if (t.CI < csLen) {
+      if (t.characterIndex < csLen) {
         t.type(t);
 
       // More strings to be typed.
       } else if(saLen > 1) {
-        t.CI = 0;
+        t.characterIndex = 0;
 
         // Multiple strings ending.
-        if(t.SI + 1 === saLen) {
+        if(t.stringIndex + 1 === saLen) {
           t.end(t);
 
         // Strings still to go, breakLines = false
-        } else if((t.SI + 1 < saLen) && !t.s.breakLines){
+        } else if((t.stringIndex + 1 < saLen) && !t.s.breakLines){
           t.to(function(){
             t.delete(t);
-          }.bind(t), t.BD);
+          }.bind(t), t.breakDelay);
 
         // Strings still to go, breakLines = true
-        } else if (t.SI + 1 < saLen && t.s.breakLines){
-          t.SI++;
+        } else if (t.stringIndex + 1 < saLen && t.s.breakLines){
+          t.stringIndex++;
           t.to(function(){
             t.insert('<br>');
             t.to(function(){
               t.type(t);
-            }.bind(t), t.BD);
-          }.bind(t), t.BD);
+            }.bind(t), t.breakDelay);
+          }.bind(t), t.breakDelay);
         }
 
         // No more strings.
@@ -205,8 +209,8 @@
   */
   p.makeNode = function(t, chr) {
     t.SEI = 0;
-    t.tPos[0] = t.CI + 1;
-    for(var d = t.CI; d < t.curStr.length; d++){
+    t.tPos[0] = t.characterIndex + 1;
+    for(var d = t.characterIndex; d < t.curStr.length; d++){
       if(t.curStr[d].indexOf('</') !== -1) {
         t.tPos[1] = d - 1;
         break;
@@ -295,8 +299,8 @@
         t.delete(t);
       
       // Strings still in the array.
-      } else if(t.SA[t.SI+1] !== undefined){
-        t.SI++;
+      } else if(t.stringArray[t.stringIndex+1] !== undefined){
+        t.stringIndex++;
         t.type(t);
 
       // Last string, start over if loop = true.
