@@ -66,8 +66,8 @@
   t.breakDelay = t.s.breakDelay;
   t.span = '<span style="display:inline-block;width:0;height:0;overflow:hidden;">_</span>';
 
-  t.toArr(t);
-  t.rake(t);
+  t.toArr();
+  t._rake(t);
 
   t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
   t.tel = t.el.find('span');
@@ -97,9 +97,9 @@
     }
   };
 
-  p.toArr = function(t) {
-    var s = t.s.strings;
-    t.stringArray = s.constructor === Array ? s.slice(0) : s.split('<br>');
+  p.toArr = function() {
+    var s = this.s.strings;
+    this.stringArray = s.constructor === Array ? s.slice(0) : s.split('<br>');
   };
 
   p.cursor = function(t) {
@@ -113,112 +113,143 @@
     }
   };
 
+  p.random = function(t) {
+    var s = this.s.speed;
+    var r = s/2;
+    t.DT = (t.s.lifeLike) ? Math.abs(Math.random() * ((s+r) - (s-r)) + (s-r)) : s;
+  };
+
  /*
   Convert each string in the array to a sub-array. While happening, search the subarrays for HTML tags. 
   When a complete tag is found, slice the subarray to get the complete tag, insert it at the correct index, 
   and delete the range of indexes where the indexed tag used to be.
   */
-  p.rake = function(t) {
+  p._rake = function(array) {
 
-    for(var i = 0; i < t.stringArray.length; i++) {
-      t.stringArray[i] = t.stringArray[i].split('');
+    for(var i = 0; i < array.length; i++) {
+      array[i] = array[i].split('');
 
-      if(t.s.html) {
-        t.tPos = [];
-        var p = t.tPos;
-        t.SEI = 0;
+      if(this.s.html) {
+        this.tPos = [];
+        var p = this.tPos;
+        this.SEI = 0;
         var tag;
         var en = false;
-        for(var j = 0; j < t.stringArray[i].length; j++) {
+        for(var j = 0; j < array[i].length; j++) {
 
-          if(t.stringArray[i][j] === '<' || t.stringArray[i][j] === '&') {
+          if(array[i][j] === '<' || array[i][j] === '&') {
             p[0] = j;
-            en = t.stringArray[i][j] === '&' ? true : false;
+            en = array[i][j] === '&' ? true : false;
           }
 
-          if(t.stringArray[i][j] === '>' || (t.stringArray[i][j] === ';' && en)) {
+          if(array[i][j] === '>' || (array[i][j] === ';' && en)) {
             p[1] = j;
             j = 0;
-            tag = (t.stringArray[i].slice(p[0], p[1]+1)).join('');
-            t.stringArray[i].splice(p[0], (p[1]-p[0]+1), tag);
+            tag = (array[i].slice(p[0], p[1]+1)).join('');
+            array[i].splice(p[0], (p[1]-p[0]+1), tag);
             en = false;
           }
         }
       }
     }
+
+    return array;
   };
 
-  p.random = function(t) {
-    var s = t.s.speed;
-    var r = s/2;
-    t.DT = (t.s.lifeLike) ? Math.abs(Math.random() * ((s+r) - (s-r)) + (s-r)) : s;
+  /* new functions! */
+
+  p._toArray = function(string){
+    return string.constructor === Array ? string.slice(0) : string.split('<br>');
   };
 
-  p.type = function(t){
-    t.curStr = t.stringArray[t.stringIndex];
-    var csLen = t.curStr.length;
-    var saLen = t.stringArray.length;
-    t.tTO = t.to(function () {
-      t.random(t);
-      var chr = t.stringArray[t.stringIndex][t.characterIndex];
-      if(chr.indexOf('<') !== -1 && chr.indexOf('</') === -1 && t.s.html){
-        t.makeNode(t, chr);
-      }
-      t.print(t, chr);
-      t.characterIndex++;
+  /*
+    Pass in a string, and loop over that string until empty. Then return true.
+  */
+  p.type = function(char){
 
-      // More chars to be typed.
-      if (t.characterIndex < csLen) {
-        t.type(t);
+    // convert to array
+    char = this._toArray(char);
+    // rake that array for HTML and convert into subarray
+    char = this._rake(char);
 
-      // More strings to be typed.
-      } else if(saLen > 1) {
-        t.characterIndex = 0;
+    var charLen = 
+    this.tTO = this.to(function() {
+      this.random(this);
+      // this.print(chr);
 
-        // Multiple strings ending.
-        if(t.stringIndex + 1 === saLen) {
-          t.end(t);
 
-        // Strings still to go, breakLines = false
-        } else if((t.stringIndex + 1 < saLen) && !t.s.breakLines){
-          t.to(function(){
-            t.delete(t);
-          }.bind(t), t.breakDelay);
 
-        // Strings still to go, breakLines = true
-        } else if (t.stringIndex + 1 < saLen && t.s.breakLines){
-          t.stringIndex++;
-          t.to(function(){
-            t.insert('<br>');
-            t.to(function(){
-              t.type(t);
-            }.bind(t), t.breakDelay);
-          }.bind(t), t.breakDelay);
-        }
+      
+    }.bind(this), this.DT);
 
-        // No more strings.
-      } else {
-        t.end(t);
-      }
-    }.bind(t), t.DT);
+    // this.currentString = this.stringArray[this.stringIndex];
+
+    // var csLen = this.currentString.length;
+    // var saLen = this.stringArray.length;
+
+
+
+    // this.tTO = this.to(function() {
+    //   this.random(this);
+    //   var chr = this.stringArray[this.stringIndex][this.characterIndex];
+    //   if(chr.indexOf('<') !== -1 && chr.indexOf('</') === -1 && this.s.html){
+    //     this.makeNode(this, chr);
+    //   }
+    //   this.print(this, chr);
+    //   this.characterIndex++;
+
+    //   // More chars to be typed.
+    //   if (this.characterIndex < csLen) {
+    //     this.type(this);
+
+    //   // More strings to be typed.
+    //   } else if(saLen > 1) {
+    //     this.characterIndex = 0;
+
+    //     // Multiple strings ending.
+    //     if(this.stringIndex + 1 === saLen) {
+    //       this.end(this);
+
+    //     // Strings still to go, breakLines = false
+    //     } else if((this.stringIndex + 1 < saLen) && !this.s.breakLines){
+    //       this.to(function(){
+    //         this.delete(this);
+    //       }.bind(this), this.breakDelay);
+
+    //     // Strings still to go, breakLines = true
+    //     } else if (this.stringIndex + 1 < saLen && this.s.breakLines){
+    //       this.stringIndex++;
+    //       this.to(function(){
+    //         this.insert('<br>');
+    //         this.to(function(){
+    //           this.type(this);
+    //         }.bind(this), this.breakDelay);
+    //       }.bind(this), this.breakDelay);
+    //     }
+
+    //     // No more strings.
+    //   } else {
+    //     this.end(this);
+    //   }
+    // }.bind(this), this.DT);
   };
 
   /*
     Get the start & ending positions of the string inside HTML opening & closing angle brackets, 
     and then create a DOM element of that string/tag name.
   */
-  p.makeNode = function(t, chr) {
-    t.SEI = 0;
-    t.tPos[0] = t.characterIndex + 1;
-    for(var d = t.characterIndex; d < t.curStr.length; d++){
-      if(t.curStr[d].indexOf('</') !== -1) {
-        t.tPos[1] = d - 1;
+  p.makeNode = function(chr) {
+    this.SEI = 0;
+    this.tPos[0] = this.characterIndex + 1;
+    for(var d = this.characterIndex; d < this.currentString.length; d++){
+      if(this.currentString[d].indexOf('</') !== -1) {
+        this.tPos[1] = d - 1;
         break;
       }
     }
-    t.tag = $($.parseHTML(chr));
-    t.print(t, t.tag);
-    t.inTag = true;
+    this.tag = $($.parseHTML(chr));
+    this.print(this.tag);
+    this.inTag = true;
   };
 
   p.end = function(t) {
@@ -231,12 +262,12 @@
     }
   };
 
-  p.print = function(t, chr) {
-    if(t.inTag) {
-      var chr2 = t.curStr[t.tPos[0] + t.SEI];
-      $(t.tag, t.el).last().append(chr2);
-      t.inTag = (t.tPos[1] === t.tPos[0] + t.SEI - 1) ? false : true;
-      t.SEI++;
+  p.print = function(chr) {
+    if(this.inTag) {
+      var chr2 = this.currentString[this.tPos[0] + this.SEI];
+      $(this.tag, this.el).last().append(chr2);
+      this.inTag = (this.tPos[1] === this.tPos[0] + this.SEI - 1) ? false : true;
+      this.SEI++;
     } else {
       this.insert(chr);
     }
