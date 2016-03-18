@@ -186,9 +186,19 @@
       this.random(this);
 
       // "print" the character 
-      console.log(char[0]);
+      if(char[0].indexOf('<') !== -1 && char[0].indexOf('</') === -1 && this.s.html){
 
-      // cut off the charater we just printed
+
+        // LOOP OVER THE STRING TO FIND WHERE THE TAG ENDS.....
+
+
+
+        this._makeNode(char[0]);
+      } else {
+        this.print(char[0]);
+      }
+
+      // shorten it
       char.splice(0, 1);
 
       // if there's more to it, run again until fully printed
@@ -196,7 +206,6 @@
         this.type(char, false);
       }
 
-      // this.print(chr);
     }.bind(this), this.DT);
   };
 
@@ -204,18 +213,18 @@
     Get the start & ending positions of the string inside HTML opening & closing angle brackets, 
     and then create a DOM element of that string/tag name.
   */
-  p.makeNode = function(chr) {
-    this.SEI = 0;
-    this.tPos[0] = this.characterIndex + 1;
-    for(var d = this.characterIndex; d < this.currentString.length; d++){
-      if(this.currentString[d].indexOf('</') !== -1) {
-        this.tPos[1] = d - 1;
-        break;
-      }
-    }
-    this.tag = $($.parseHTML(chr));
+  p._makeNode = function(char) {
+    this.tag = $($.parseHTML(char));
     this.print(this.tag);
     this.inTag = true;
+  };
+
+  p.print = function(chr) {
+    if(this.inTag) {
+      $(this.tag, this.el).last().append(chr);
+    } else {
+      this.insert(chr);
+    }
   };
 
   p.end = function(t) {
@@ -225,17 +234,6 @@
       }.bind(t), t.s.loopDelay);
     } else {
       t.cb();
-    }
-  };
-
-  p.print = function(chr) {
-    if(this.inTag) {
-      var chr2 = this.currentString[this.tPos[0] + this.SEI];
-      $(this.tag, this.el).last().append(chr2);
-      this.inTag = (this.tPos[1] === this.tPos[0] + this.SEI - 1) ? false : true;
-      this.SEI++;
-    } else {
-      this.insert(chr);
     }
   };
 
