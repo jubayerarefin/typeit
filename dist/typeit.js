@@ -165,73 +165,39 @@
   /*
     Pass in a string, and loop over that string until empty. Then return true.
   */
-  p.type = function(char){
+  p.type = function(char, rake){
+
+    // set default 'rake' value
+    rake = typeof rake === 'undefined' ? true : rake;
 
     // convert to array
     char = this._toArray(char);
-    // rake that array for HTML and convert into subarray
-    char = this._rake(char);
 
-    var charLen = 
+    // if it's designated, rake that bad boy for HTML tags and stuff
+    if(rake) {
+      char = this._rake(char);
+      char = char[0];
+    }
+
+    // do the work that matters
     this.tTO = this.to(function() {
+
+      // randomize the timeout each time, if that's your thing
       this.random(this);
+
+      // "print" the character 
+      console.log(char[0]);
+
+      // cut off the charater we just printed
+      char.splice(0, 1);
+
+      // if there's more to it, run again until fully printed
+      if(char.length) {
+        this.type(char, false);
+      }
+
       // this.print(chr);
-
-
-
-      
     }.bind(this), this.DT);
-
-    // this.currentString = this.stringArray[this.stringIndex];
-
-    // var csLen = this.currentString.length;
-    // var saLen = this.stringArray.length;
-
-
-
-    // this.tTO = this.to(function() {
-    //   this.random(this);
-    //   var chr = this.stringArray[this.stringIndex][this.characterIndex];
-    //   if(chr.indexOf('<') !== -1 && chr.indexOf('</') === -1 && this.s.html){
-    //     this.makeNode(this, chr);
-    //   }
-    //   this.print(this, chr);
-    //   this.characterIndex++;
-
-    //   // More chars to be typed.
-    //   if (this.characterIndex < csLen) {
-    //     this.type(this);
-
-    //   // More strings to be typed.
-    //   } else if(saLen > 1) {
-    //     this.characterIndex = 0;
-
-    //     // Multiple strings ending.
-    //     if(this.stringIndex + 1 === saLen) {
-    //       this.end(this);
-
-    //     // Strings still to go, breakLines = false
-    //     } else if((this.stringIndex + 1 < saLen) && !this.s.breakLines){
-    //       this.to(function(){
-    //         this.delete(this);
-    //       }.bind(this), this.breakDelay);
-
-    //     // Strings still to go, breakLines = true
-    //     } else if (this.stringIndex + 1 < saLen && this.s.breakLines){
-    //       this.stringIndex++;
-    //       this.to(function(){
-    //         this.insert('<br>');
-    //         this.to(function(){
-    //           this.type(this);
-    //         }.bind(this), this.breakDelay);
-    //       }.bind(this), this.breakDelay);
-    //     }
-
-    //     // No more strings.
-    //   } else {
-    //     this.end(this);
-    //   }
-    // }.bind(this), this.DT);
   };
 
   /*
