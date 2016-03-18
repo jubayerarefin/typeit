@@ -186,12 +186,16 @@
       this.random(this);
 
       // "print" the character 
+      // if an HTML tag is found...
       if(char[0].indexOf('<') !== -1 && char[0].indexOf('</') === -1 && this.s.html){
 
-
-        // LOOP OVER THE STRING TO FIND WHERE THE TAG ENDS.....
-
-
+        // loop the string to find where the tag ends
+        for(var i = 0; i< char.length; i++) {
+          if(char[i].indexOf('</') !== -1) {
+            this.tagCount = 0;
+            this.tagDuration = i;
+          }
+        }
 
         this._makeNode(char[0]);
       } else {
@@ -222,6 +226,13 @@
   p.print = function(chr) {
     if(this.inTag) {
       $(this.tag, this.el).last().append(chr);
+
+      if(this.tagCount < this.tagDuration) {
+        this.tagCount++;
+      } else {
+        this.inTag = false;
+      }
+      
     } else {
       this.insert(chr);
     }
