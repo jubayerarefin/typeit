@@ -32,18 +32,25 @@
     <script src="../dist/typeit.min.js"></script>
 
     <script>
-      $('#typeItBox').typeIt({
-      strings: ['hello, <strong>how are you?</strong>'],
-      speed: 50,
-      breakLines: false,
-      loop: false,
-      autoStart: false
-    });
+    //   $('#typeItBox').typeIt({
+    //   strings: ['hello, <strong>how are you?</strong>'],
+    //   speed: 50,
+    //   breakLines: false,
+    //   loop: false,
+    //   autoStart: false
+    // });
 
-    var el = $('#typeItBox').data('typeit');
-    // console.log(el.type);
+  //  var el = $('#typeItBox').data('typeit');
 
-    el.type('hello! <strong>this is a tag.</strong> and that is that.');
+    //el.type('hello! <strong>this is a tag.</strong> and that is that.');
+
+    $('#typeItBox').typeIt().tiDelete().tiType();
+
+    ($('#typeItBox').data('typeit').functionQueue.shift())();
+
+    setTimeout(function() {
+      ($('#typeItBox').data('typeit').functionQueue.shift())();
+    }, 3000);
     </script>
 
   </body>

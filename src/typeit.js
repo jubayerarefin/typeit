@@ -14,6 +14,26 @@
    });
   };
 
+  function ttype() {
+    console.log('ttype!');
+  }
+
+  function tdelete() {
+    console.log('tdelete');
+  }
+
+  $.fn.tiType = function(){
+    var Instance = this.data('typeit');
+    Instance.functionQueue.push(ttype);
+    return this;
+  };
+
+  $.fn.tiDelete = function(){
+    var Instance = this.data('typeit');
+    Instance.functionQueue.push(tdelete);
+    return this;
+  };
+
   // Accepts element, options, and callback function.
   $.fn.typeIt.tClass = function(e, o, c) {
     var t = this;
@@ -48,12 +68,13 @@
       autoStart: e.data('typeitAutostart')
     };
 
+    this.functionQueue = [];
     t.s = $.extend({}, t.d, o, t.dd);
     t.el = e;
     t.cb = c; 
     t.valCB(t);
     t.elCheck(t);   
-    t.init(t, o);
+    //t.init(t, o);
   };
 
  var p = $.fn.typeIt.tClass.prototype;
@@ -208,6 +229,8 @@
       // if there's more to it, run again until fully printed
       if(char.length) {
         this.type(char, false);
+      } else{
+        return;
       }
 
     }.bind(this), this.DT);
@@ -252,68 +275,69 @@
     If show cursor is enabled, move array starting point for the for loop back one,
     so that the loop will not find the closing tag and delete the cursor.
   */
-  p.delete = function(t, undefined) {
-    t.dTO = t.to(function () {
-      t.random(t);
-      var a = t.tel.html().split("");
-      for (var n = a.length - 1; n > -1; n--) {
-        if((a[n] === '>' || a[n] === ';') && t.s.html) {
-          for(var o = n; o > -1; o--) {
+  p.delete = function() {
+    console.log('hi');
+    // this.dTO = this.to(function () {
+    //   this.random(t);
+    //   var a = this.tel.html().split("");
+    //   for (var n = a.length - 1; n > -1; n--) {
+    //     if((a[n] === '>' || a[n] === ';') && this.s.html) {
+    //       for(var o = n; o > -1; o--) {
 
-            if(a.slice(o-3, o+1).join('') === '<br>') {
-              a.splice(o-3, 4);
-              break;
-            }
+    //         if(a.slice(o-3, o+1).join('') === '<br>') {
+    //           a.splice(o-3, 4);
+    //           break;
+    //         }
 
-            if(a[o] === '&') {
-              a.splice(o, n-o+1);
-              break;
-            }
+    //         if(a[o] === '&') {
+    //           a.splice(o, n-o+1);
+    //           break;
+    //         }
 
-            if(a[o] === '<') {
-              if(a[o-1] !== '>') {
-                if(a[o-1] === ';') {
-                  for(var p = o-1; p > -1; p--) {
-                    if(a[p] === '&') {
-                      a.splice(p, o-p);
-                      break;
-                    }
-                  }
-                }
+    //         if(a[o] === '<') {
+    //           if(a[o-1] !== '>') {
+    //             if(a[o-1] === ';') {
+    //               for(var p = o-1; p > -1; p--) {
+    //                 if(a[p] === '&') {
+    //                   a.splice(p, o-p);
+    //                   break;
+    //                 }
+    //               }
+    //             }
 
-                a.splice(o-1, 1);
-                break;
-              }
-            }
-          }
-          break;
-        }
-        else {
-          a.splice(n, 1);
-          break;
-        }
-      }
+    //             a.splice(o-1, 1);
+    //             break;
+    //           }
+    //         }
+    //       }
+    //       break;
+    //     }
+    //     else {
+    //       a.splice(n, 1);
+    //       break;
+    //     }
+    //   }
       
-      t.tel.html(a.join(''));
+    //   this.tel.html(a.join(''));
 
-      if(t.tel.text().length <= 1){
-        t.tel.html('');
-      } 
+    //   if(this.tel.text().length <= 1){
+    //     this.tel.html('');
+    //   } 
 
-      // Characters still in the string.
-      if (t.tel.text().length > 0) {
-        t.delete(t);
+    //   // Characters still in the string.
+    //   if (this.tel.text().length > 0) {
+    //     this.delete(t);
       
-      // Strings still in the array.
-      } else if(t.stringArray[t.stringIndex+1] !== undefined){
-        t.stringIndex++;
-        t.type(t);
+    //   // Strings still in the array.
+    //   } else if(this.stringArray[this.stringIndex+1] !== undefined){
+    //     this.stringIndex++;
+    //     this.type(t);
 
-      // Last string, start over if loop = true.
-      } else if (t.s.loop){
-        t.init(t);
-      }
-    }.bind(t), t.DT/3);
+    //   // Last string, start over if loop = true.
+    //   } else if (this.s.loop){
+    //     this.init(t);
+    //   }
+    // }.bind(t), this.DT/3);
   };
 
 }(jQuery));
