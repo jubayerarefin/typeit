@@ -14,25 +14,25 @@
    });
   };
 
-  function ttype() {
-    console.log('ttype!');
-  }
+  // function ttype() {
+  //   console.log('ttype!');
+  // }
 
-  function tdelete() {
-    console.log('tdelete');
-  }
+  // function tdelete() {
+  //   console.log('tdelete');
+  // }
 
-  $.fn.tiType = function(){
-    var Instance = this.data('typeit');
-    Instance.functionQueue.push(ttype);
-    return this;
-  };
+  // $.fn.tiType = function(){
+  //   var Instance = this.data('typeit');
+  //   Instance.functionQueue.push(ttype);
+  //   return this;
+  // };
 
-  $.fn.tiDelete = function(){
-    var Instance = this.data('typeit');
-    Instance.functionQueue.push(tdelete);
-    return this;
-  };
+  // $.fn.tiDelete = function(){
+  //   var Instance = this.data('typeit');
+  //   Instance.functionQueue.push(tdelete);
+  //   return this;
+  // };
 
   // Accepts element, options, and callback function.
   $.fn.typeIt.tClass = function(e, o, c) {
@@ -74,7 +74,7 @@
     t.cb = c; 
     t.valCB(t);
     t.elCheck(t);   
-    //t.init(t, o);
+    t.init(t, o);
   };
 
  var p = $.fn.typeIt.tClass.prototype;
@@ -90,7 +90,7 @@
   t.toArr();
   t._rake(t);
 
-  t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
+  t.el.html('<span style="display:inline;position:relative;font:inherit;">12345</span>');
   t.tel = t.el.find('span');
   t.insert = function(c) { t.tel.append(c); };
 
@@ -134,10 +134,10 @@
     }
   };
 
-  p.random = function(t) {
+  p._random = function() {
     var s = this.s.speed;
     var r = s/2;
-    t.DT = (t.s.lifeLike) ? Math.abs(Math.random() * ((s+r) - (s-r)) + (s-r)) : s;
+    this.DT = this.s.lifeLike ? Math.abs(Math.random() * ((s+r) - (s-r)) + (s-r)) : s;
   };
 
  /*
@@ -203,8 +203,8 @@
     // do the work that matters
     this.tTO = this.to(function() {
 
-      // randomize the timeout each time, if that's your thing
-      this.random(this);
+      // _randomize the timeout each time, if that's your thing
+      this._random(this);
 
       // "print" the character 
       // if an HTML tag is found...
@@ -275,69 +275,85 @@
     If show cursor is enabled, move array starting point for the for loop back one,
     so that the loop will not find the closing tag and delete the cursor.
   */
-  p.delete = function() {
-    console.log('hi');
-    // this.dTO = this.to(function () {
-    //   this.random(t);
-    //   var a = this.tel.html().split("");
-    //   for (var n = a.length - 1; n > -1; n--) {
-    //     if((a[n] === '>' || a[n] === ';') && this.s.html) {
-    //       for(var o = n; o > -1; o--) {
+  p.delete = function(characters) {
 
-    //         if(a.slice(o-3, o+1).join('') === '<br>') {
-    //           a.splice(o-3, 4);
-    //           break;
-    //         }
+    this.dTO = this.to(function() {
 
-    //         if(a[o] === '&') {
-    //           a.splice(o, n-o+1);
-    //           break;
-    //         }
+      // _randomize it 
+      this._random();
 
-    //         if(a[o] === '<') {
-    //           if(a[o-1] !== '>') {
-    //             if(a[o-1] === ';') {
-    //               for(var p = o-1; p > -1; p--) {
-    //                 if(a[p] === '&') {
-    //                   a.splice(p, o-p);
-    //                   break;
-    //                 }
-    //               }
-    //             }
+      // the current content
+      var a = this.tel.html().split("");
 
-    //             a.splice(o-1, 1);
-    //             break;
-    //           }
-    //         }
-    //       }
-    //       break;
-    //     }
-    //     else {
-    //       a.splice(n, 1);
-    //       break;
-    //     }
-    //   }
+      // the amount we want to delete
+      var amount = characters === undefined ? a.length-1 : characters + 1;
+
+     // console.log(amount);
+
+      // cut the array by a character
+      for (var n = amount; n > -1; n--) {
+        if((a[n] === '>' || a[n] === ';') && this.s.html) {
+          for(var o = n; o > -1; o--) {
+
+            if(a.slice(o-3, o+1).join('') === '<br>') {
+              a.splice(o-3, 4);
+              break;
+            }
+
+            if(a[o] === '&') {
+              a.splice(o, n-o+1);
+              break;
+            }
+
+            if(a[o] === '<') {
+              if(a[o-1] !== '>') {
+                if(a[o-1] === ';') {
+                  for(var p = o-1; p > -1; p--) {
+                    if(a[p] === '&') {
+                      a.splice(p, o-p);
+                      break;
+                    }
+                  }
+                }
+
+                a.splice(o-1, 1);
+                break;
+              }
+            }
+          }
+          break;
+        }
+        else {
+          a.splice(n, 1);
+          break;
+        }
+      }
       
-    //   this.tel.html(a.join(''));
+      // repopulate the element
+      this.tel.html(a.join(''));
 
-    //   if(this.tel.text().length <= 1){
-    //     this.tel.html('');
-    //   } 
+      // // if(this.tel.text().length <= 1){
+      // //   this.tel.html('');
+      // // } 
 
-    //   // Characters still in the string.
-    //   if (this.tel.text().length > 0) {
-    //     this.delete(t);
+      // Characters still in the string.
+      if (amount > (characters === undefined ? 0 : 2)) {
+        this.delete(characters === undefined ? undefined : characters-1);
+      } else {
+        console.log('done!');
+      }
       
-    //   // Strings still in the array.
-    //   } else if(this.stringArray[this.stringIndex+1] !== undefined){
-    //     this.stringIndex++;
-    //     this.type(t);
+      // // Strings still in the array.
+      // } else if(this.stringArray[this.stringIndex+1] !== undefined){
+      //   this.stringIndex++;
+      //   this.type(t);
 
-    //   // Last string, start over if loop = true.
-    //   } else if (this.s.loop){
-    //     this.init(t);
-    //   }
-    // }.bind(t), this.DT/3);
+      // // Last string, start over if loop = true.
+      // } else if (this.s.loop){
+      //   this.init(this);
+      // }
+    }.bind(this), 1000);
+//this.DT/3
   };
 
 }(jQuery));

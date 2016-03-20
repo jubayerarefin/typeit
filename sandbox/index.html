@@ -21,36 +21,27 @@
 
     <section>
 
-       <span id="typeItBox"></span>
+       <span id="typeItBox">hello!</span>
 
     </section>
 
-    <!--<script src="../src/jquery-2.1.4.min.js"></script>-->
-
-    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="../src/jquery-2.1.4.min.js"></script>
 
     <script src="../dist/typeit.min.js"></script>
 
     <script>
-    //   $('#typeItBox').typeIt({
-    //   strings: ['hello, <strong>how are you?</strong>'],
-    //   speed: 50,
-    //   breakLines: false,
-    //   loop: false,
-    //   autoStart: false
-    // });
+      $('#typeItBox').typeIt({
+      strings: ['hello, <strong>how are you?</strong>'],
+      speed: 50,
+      breakLines: false,
+      loop: false,
+      autoStart: false
+    });
 
-  //  var el = $('#typeItBox').data('typeit');
+    var el = $('#typeItBox').data('typeit');
 
-    //el.type('hello! <strong>this is a tag.</strong> and that is that.');
+    el.delete(3);
 
-    $('#typeItBox').typeIt().tiDelete().tiType();
-
-    ($('#typeItBox').data('typeit').functionQueue.shift())();
-
-    setTimeout(function() {
-      ($('#typeItBox').data('typeit').functionQueue.shift())();
-    }, 3000);
     </script>
 
   </body>
