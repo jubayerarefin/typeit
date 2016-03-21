@@ -21,7 +21,7 @@
 
     <section>
 
-       <span id="typeItBox">greetings.</span>
+       <span id="typeItBox"></span>
 
     </section>
 
@@ -31,11 +31,13 @@
 
     <script>
       $('#typeItBox').typeIt({
-      strings: ['hello, <strong>how are you?</strong>'],
+      strings: 'hello, <strong>how are you?</strong>',
       speed: 50,
       breakLines: false,
       loop: false,
-      autoStart: false
+      autoStart: true
+    }, function() {
+      console.log('callback!');
     });
 
    //  var el = $('#typeItBox').data('typeit');

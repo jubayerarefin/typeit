@@ -72,7 +72,7 @@
     t.s = $.extend({}, t.d, o, t.dd);
     t.el = e;
     t.cb = c; 
-    t.valCB(t);
+    t._valCB(t);
     t.elCheck(t);   
     t.init(t, o);
   };
@@ -80,39 +80,55 @@
  var p = $.fn.typeIt.tClass.prototype;
 
  p.init = function(t){
-  t.characterIndex = 0;
-  t.SEI = 0; 
   t.stringIndex = 0; 
   t.stringArray = []; 
   t.breakDelay = t.s.breakDelay;
   t.span = '<span style="display:inline-block;width:0;height:0;overflow:hidden;">_</span>';
 
   t.toArr();
-  t._rake(t);
+  // t._rake(t);
 
   t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
   t.tel = t.el.find('span');
   t.insert = function(c) { t.tel.append(c); };
 
-  this.functionQueue.push([this.type, 'testing this bad boy!']);
-  this.functionQueue.push([this.delete]);
+  console.log(t.s.strings);
+
+  for(i = 0; i < t.s.strings.length; i++) {
+   this.functionQueue.push([this.type, t.s.strings[i]]);
+  }
+
+  // this.functionQueue.push([this.type, 'testing this bad boy!']);
+  // this.functionQueue.push([this.break]);
+  // this.functionQueue.push([this.type, 'testing this bad boy!']);
+  // this.functionQueue.push([this.delete]);
 
   if(t.s.autoStart) {
     t.cursor(t);
-    t.to(function() {
 
-      this.functionQueue = [];
-      //t.type(t);
-    }.bind(t), t.s.startDelay);
+    t.to(function() {
+      
+      this.executeQueue();
+
+    }.bind(this), this.s.startDelay);
   }
  };
 
  p.executeQueue = function() {
-    var thisFunction = this.functionQueue.shift();
-    thisFunction[0].bind(this)(thisFunction[1]);
+    if(this.functionQueue.length) {
+      var thisFunction = this.functionQueue.shift();
+      thisFunction[0].bind(this)(thisFunction[1]);
+    } else {
+      this.cb();
+    }
  };
 
-  p.valCB = function(t) {
+ p.break = function() {
+  this.insert('<br>');
+  this.executeQueue();
+ };
+
+  p._valCB = function(t) {
     t.cb = t.cb === undefined ? function(){return;} : t.cb;
   };
 
@@ -130,6 +146,7 @@
 
   p.toArr = function() {
     var s = this.s.strings;
+
     this.stringArray = s.constructor === Array ? s.slice(0) : s.split('<br>');
   };
 
@@ -163,7 +180,6 @@
       if(this.s.html) {
         this.tPos = [];
         var p = this.tPos;
-        this.SEI = 0;
         var tag;
         var en = false;
         for(var j = 0; j < array[i].length; j++) {
@@ -240,7 +256,7 @@
       if(char.length) {
         this.type(char, false);
       } else{
-        return;
+        this.executeQueue();
       }
 
     }.bind(this), this.DT);
@@ -340,28 +356,13 @@
       // repopulate the element
       this.tel.html(a.join(''));
 
-      // // if(this.tel.text().length <= 1){
-      // //   this.tel.html('');
-      // // } 
-
       // Characters still in the string.
       if (amount > (characters === undefined ? 0 : 2)) {
         this.delete(characters === undefined ? undefined : characters-1);
       } else {
-        console.log('done!');
+        this.executeQueue();
       }
-      
-      // // Strings still in the array.
-      // } else if(this.stringArray[this.stringIndex+1] !== undefined){
-      //   this.stringIndex++;
-      //   this.type(t);
-
-      // // Last string, start over if loop = true.
-      // } else if (this.s.loop){
-      //   this.init(this);
-      // }
-    }.bind(this), 1000);
-//this.DT/3
+    }.bind(this), this.DT/3);
   };
 
 }(jQuery));
