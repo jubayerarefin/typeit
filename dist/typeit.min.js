@@ -90,16 +90,26 @@
   t.toArr();
   t._rake(t);
 
-  t.el.html('<span style="display:inline;position:relative;font:inherit;">12345</span>');
+  t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
   t.tel = t.el.find('span');
   t.insert = function(c) { t.tel.append(c); };
+
+  this.functionQueue.push([this.type, 'testing this bad boy!']);
+  this.functionQueue.push([this.delete]);
 
   if(t.s.autoStart) {
     t.cursor(t);
     t.to(function() {
-      t.type(t);
+
+      this.functionQueue = [];
+      //t.type(t);
     }.bind(t), t.s.startDelay);
   }
+ };
+
+ p.executeQueue = function() {
+    var thisFunction = this.functionQueue.shift();
+    thisFunction[0].bind(this)(thisFunction[1]);
  };
 
   p.valCB = function(t) {
@@ -286,9 +296,7 @@
       var a = this.tel.html().split("");
 
       // the amount we want to delete
-      var amount = characters === undefined ? a.length-1 : characters + 1;
-
-     // console.log(amount);
+      var amount = characters === undefined || characters === null ? a.length-1 : characters + 1;
 
       // cut the array by a character
       for (var n = amount; n > -1; n--) {
