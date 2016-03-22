@@ -46,6 +46,8 @@
       cursorSpeed: 1000,
       breakLines: true,
       breakDelay: 750,
+      preStringPause: 100,
+      postStringPause: 500,
       startDelay: 250,
       loop: false,
       loopDelay: 750,
@@ -62,6 +64,8 @@
       breakLines: e.data('typeitBreaklines'),
       breakDelay: e.data('typeitBreakdelay'),
       startDelay: e.data('typeitStartdelay'),
+      preStringPause: e.data('typeitPrestringpause'),
+      postStringPause: e.data('typeitPoststringpause'),
       loop: e.data('typeitLoop'),
       loopDelay: e.data('typeitLoopdelay'),
       html: e.data('typeitHtml'),
@@ -69,6 +73,7 @@
     };
 
     this.functionQueue = [];
+    this.inTag = false;
     t.s = $.extend({}, t.d, o, t.dd);
     t.el = e;
     t.cb = c; 
@@ -80,40 +85,27 @@
  var p = $.fn.typeIt.tClass.prototype;
 
  p.init = function(t){
-  t.stringIndex = 0; 
-  t.stringArray = []; 
-  t.breakDelay = t.s.breakDelay;
   t.span = '<span style="display:inline-block;width:0;height:0;overflow:hidden;">_</span>';
-
   t.toArr();
-  // t._rake(t);
-
   t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
   t.tel = t.el.find('span');
   t.insert = function(c) { t.tel.append(c); };
 
   for(i = 0; i < t.s.strings.length; i++) {
     this.functionQueue.push([this.type, t.s.strings[i]]);
+    this.functionQueue.push([this.pause, t.s.breakDelay/2]);
 
-    if(t.s.breakLines) {
-      this.functionQueue.push([this.break]);
-    } else {
-      this.functionQueue.push([this.delete]);
+    if(i < (t.s.strings.length - 1)) {
+      this.functionQueue.push([t.s.breakLines ? this.break : this.delete]);
     }
-  }
 
-  // this.functionQueue.push([this.type, 'testing this bad boy!']);
-  // this.functionQueue.push([this.break]);
-  // this.functionQueue.push([this.type, 'testing this bad boy!']);
-  // this.functionQueue.push([this.delete]);
+    this.functionQueue.push([this.pause, t.s.breakDelay/2]);
+  }
 
   if(t.s.autoStart) {
     t.cursor(t);
-
     t.to(function() {
-      
       this.executeQueue();
-
     }.bind(this), this.s.startDelay);
   }
  };
@@ -131,7 +123,7 @@ p.pause = function(duration) {
   duration = duration === undefined || duration === null ? this.s.breakDelay : duration;
   this.to(function() {
     this.executeQueue();
-  }, duration);
+  }.bind(this), duration);
 };
 
 p.break = function() {
@@ -224,6 +216,8 @@ p.to = function(fn, t) {
   */
   p.type = function(char, rake){
 
+    /* FOR SOME REASON, THE FIRST CHARACTER IS GETTING CUT UNECESSARILY */
+
     // set default 'rake' value
     rake = typeof rake === 'undefined' ? true : rake;
 
@@ -243,14 +237,14 @@ p.to = function(fn, t) {
       this._random(this);
 
       // "print" the character 
-      // if an HTML tag is found...
-      if(char[0].indexOf('<') !== -1 && char[0].indexOf('</') === -1 && this.s.html){
+      // if an opening HTML tag is found and we're not already pringing inside a tag
+      if((char[0].indexOf('<') !== -1 && char[0].indexOf('</') === -1) && (!this.inTag)){
 
         // loop the string to find where the tag ends
-        for(var i = 0; i< char.length; i++) {
+        for(var i = char.length - 1; i >= 0; i--) {
           if(char[i].indexOf('</') !== -1) {
             this.tagCount = 0;
-            this.tagDuration = i-1;
+            this.tagDuration = i;
           }
         }
 
@@ -288,6 +282,7 @@ p.to = function(fn, t) {
 
       if(this.tagCount < this.tagDuration) {
         this.tagCount++;
+
       } else {
         this.inTag = false;
       }
@@ -360,6 +355,17 @@ p.to = function(fn, t) {
         else {
           a.splice(n, 1);
           break;
+        }
+      }
+
+      // if we've found an empty set of HTML tags...
+      if(this.tel.html().indexOf('></') > -1) {
+        for (var i = a.length; i >= 0; i--) {
+          console.log(i);
+          if(a[i] === '<') {
+            //a = a.splice(i, a.length-i+1);
+            break;
+          }
         }
       }
       

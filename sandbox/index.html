@@ -31,11 +31,11 @@
 
     <script>
       $('#typeItBox').typeIt({
-      strings: ['hello, <strong>how are you?</strong>', 'and here is one more!'],
-      speed: 50,
+      strings: ['<i>one</i> <strong>two</strong>', 'and more'],
+      speed: 300,
       breakLines: false,
-      loop: false,
-      autoStart: true
+      startDelay: 1000,
+      breakDelay: 3000
     }, function() {
       console.log('callback!');
     });
