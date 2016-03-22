@@ -93,7 +93,13 @@
   t.insert = function(c) { t.tel.append(c); };
 
   for(i = 0; i < t.s.strings.length; i++) {
-   this.functionQueue.push([this.type, t.s.strings[i]]);
+    this.functionQueue.push([this.type, t.s.strings[i]]);
+
+    if(t.s.breakLines) {
+      this.functionQueue.push([this.break]);
+    } else {
+      this.functionQueue.push([this.delete]);
+    }
   }
 
   // this.functionQueue.push([this.type, 'testing this bad boy!']);
@@ -121,20 +127,27 @@
     }
  };
 
- p.break = function() {
+p.pause = function(duration) {
+  duration = duration === undefined || duration === null ? this.s.breakDelay : duration;
+  this.to(function() {
+    this.executeQueue();
+  }, duration);
+};
+
+p.break = function() {
   this.insert('<br>');
   this.executeQueue();
- };
+};
 
-  p._valCB = function(t) {
-    t.cb = t.cb === undefined ? function(){return;} : t.cb;
-  };
+p._valCB = function(t) {
+  t.cb = t.cb === undefined ? function(){return;} : t.cb;
+};
 
-  p.to = function(fn, t) {
-    setTimeout(function() {
-      fn();
-    }.bind(t), t);
-  };
+p.to = function(fn, t) {
+  setTimeout(function() {
+    fn();
+  }.bind(t), t);
+};
 
   p.elCheck = function(t) {
     if(t.el.html().length > 0) {
@@ -237,7 +250,7 @@
         for(var i = 0; i< char.length; i++) {
           if(char[i].indexOf('</') !== -1) {
             this.tagCount = 0;
-            this.tagDuration = i;
+            this.tagDuration = i-1;
           }
         }
 
