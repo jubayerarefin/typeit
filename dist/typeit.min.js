@@ -92,8 +92,6 @@
   t.tel = t.el.find('span');
   t.insert = function(c) { t.tel.append(c); };
 
-  console.log(t.s.strings);
-
   for(i = 0; i < t.s.strings.length; i++) {
    this.functionQueue.push([this.type, t.s.strings[i]]);
   }
@@ -146,8 +144,7 @@
 
   p.toArr = function() {
     var s = this.s.strings;
-
-    this.stringArray = s.constructor === Array ? s.slice(0) : s.split('<br>');
+    this.s.strings = s.constructor === Array ? s.slice(0) : s.split('<br>');
   };
 
   p.cursor = function(t) {
