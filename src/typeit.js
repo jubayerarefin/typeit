@@ -89,9 +89,12 @@
   t.toArr();
   t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
   t.tel = t.el.find('span');
-  t.insert = function(c) { t.tel.append(c); };
+  t.insert = function(c) { 
+    t.tel.append(c);
+  };
 
   for(i = 0; i < t.s.strings.length; i++) {
+
     this.functionQueue.push([this.type, t.s.strings[i]]);
     this.functionQueue.push([this.pause, t.s.breakDelay/2]);
 
@@ -214,20 +217,18 @@ p.to = function(fn, t) {
   /*
     Pass in a string, and loop over that string until empty. Then return true.
   */
-  p.type = function(char, rake){
-
-    /* FOR SOME REASON, THE FIRST CHARACTER IS GETTING CUT UNECESSARILY */
+  p.type = function(string, rake){
 
     // set default 'rake' value
     rake = typeof rake === 'undefined' ? true : rake;
 
     // convert to array
-    char = this._toArray(char);
+    string = this._toArray(string);
 
     // if it's designated, rake that bad boy for HTML tags and stuff
     if(rake) {
-      char = this._rake(char);
-      char = char[0];
+      string = this._rake(string);
+      string = string[0];
     }
 
     // do the work that matters
@@ -236,29 +237,29 @@ p.to = function(fn, t) {
       // _randomize the timeout each time, if that's your thing
       this._random(this);
 
-      // "print" the character 
+      // "print" the stringacter 
       // if an opening HTML tag is found and we're not already pringing inside a tag
-      if((char[0].indexOf('<') !== -1 && char[0].indexOf('</') === -1) && (!this.inTag)){
+      if((string[0].indexOf('<') !== -1 && string[0].indexOf('</') === -1) && (!this.inTag)){
 
         // loop the string to find where the tag ends
-        for(var i = char.length - 1; i >= 0; i--) {
-          if(char[i].indexOf('</') !== -1) {
-            this.tagCount = 0;
+        for(var i = string.length - 1; i >= 0; i--) {
+          if(string[i].indexOf('</') !== -1) {
+            this.tagCount = 1;
             this.tagDuration = i;
           }
         }
 
-        this._makeNode(char[0]);
+        this._makeNode(string[0]);
       } else {
-        this.print(char[0]);
+        this.print(string[0]);
       }
 
       // shorten it
-      char.splice(0, 1);
+      string.splice(0, 1);
 
       // if there's more to it, run again until fully printed
-      if(char.length) {
-        this.type(char, false);
+      if(string.length) {
+        this.type(string, false);
       } else{
         this.executeQueue();
       }
@@ -278,6 +279,7 @@ p.to = function(fn, t) {
 
   p.print = function(chr) {
     if(this.inTag) {
+
       $(this.tag, this.el).last().append(chr);
 
       if(this.tagCount < this.tagDuration) {
@@ -359,10 +361,6 @@ p.to = function(fn, t) {
       }
 
       // if we've found an empty set of HTML tags...
-      console.log(this.tel.html().indexOf('></') > -1);
-      console.log(this.tel.html());
-      console.log('---');
-      
       if(this.tel.html().indexOf('></') > -1) {
         for (var i = this.tel.html().indexOf('></')-2; i >= 0; i--) {
           if(a[i] === '<') {
