@@ -78,7 +78,7 @@
     t.el = e;
     t.cb = c; 
     t._valCB(t);
-    t.elCheck(t);   
+    t._elCheck(t);   
     t.init(t, o);
   };
 
@@ -86,7 +86,7 @@
 
  p.init = function(t){
   t.span = '<span style="display:inline-block;width:0;height:0;overflow:hidden;">_</span>';
-  t.toArr();
+  this.s.strings = this._toArray(this.s.strings);
   t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
   t.tel = t.el.find('span');
   t.insert = function(c) { 
@@ -106,53 +106,52 @@
   }
 
   if(t.s.autoStart) {
-    t.cursor(t);
-    t.to(function() {
-      this.executeQueue();
-    }.bind(this), this.s.startDelay);
-  }
- };
-
- p.executeQueue = function() {
-    if(this.functionQueue.length) {
-      var thisFunction = this.functionQueue.shift();
-      thisFunction[0].bind(this)(thisFunction[1]);
-    } else {
-      this.cb();
+      t.cursor(t);
+      t._to(function() {
+        this._executeQueue();
+      }.bind(this), this.s.startDelay);
     }
- };
+  };
 
-p.pause = function(duration) {
-  duration = duration === undefined || duration === null ? this.s.breakDelay : duration;
-  this.to(function() {
-    this.executeQueue();
-  }.bind(this), duration);
-};
+  p._executeQueue = function() {
+      if(this.functionQueue.length) {
+        var thisFunction = this.functionQueue.shift();
+        thisFunction[0].bind(this)(thisFunction[1]);
+      } else {
+        this.cb();
+      }
+   };
 
-p.break = function() {
-  this.insert('<br>');
-  this.executeQueue();
-};
+  p.pause = function(duration) {
+    duration = duration === undefined || duration === null ? this.s.breakDelay : duration;
+    this._to(function() {
+      this._executeQueue();
+    }.bind(this), duration);
+  };
 
-p._valCB = function(t) {
-  t.cb = t.cb === undefined ? function(){return;} : t.cb;
-};
+  p.break = function() {
+    this.insert('<br>');
+    this._executeQueue();
+  };
 
-p.to = function(fn, t) {
-  setTimeout(function() {
-    fn();
-  }.bind(t), t);
-};
+  p._valCB = function(t) {
+    t.cb = t.cb === undefined ? function(){return;} : t.cb;
+  };
 
-  p.elCheck = function(t) {
+  p._to = function(fn, t) {
+    setTimeout(function() {
+      fn();
+    }.bind(t), t);
+  };
+
+  p._elCheck = function(t) {
     if(t.el.html().length > 0) {
       t.s.strings = t.el.html().trim();
     }
   };
 
-  p.toArr = function() {
-    var s = this.s.strings;
-    this.s.strings = s.constructor === Array ? s.slice(0) : s.split('<br>');
+  p._toArray = function(string) {
+    return string.constructor === Array ? string.slice(0) : string.split('<br>');
   };
 
   p.cursor = function(t) {
@@ -161,7 +160,7 @@ p.to = function(fn, t) {
       var s = t.s.cursorSpeed;
       (function loop() {
         t.el.find('.c').fadeTo(s/2, 0).fadeTo(s/2, 1);
-        t.to(loop, s);
+        t._to(loop, s);
       })();
     }
   };
@@ -209,11 +208,6 @@ p.to = function(fn, t) {
   };
 
   /* new functions! */
-
-  p._toArray = function(string){
-    return string.constructor === Array ? string.slice(0) : string.split('<br>');
-  };
-
   /*
     Pass in a string, and loop over that string until empty. Then return true.
   */
@@ -232,7 +226,7 @@ p.to = function(fn, t) {
     }
 
     // do the work that matters
-    this.tTO = this.to(function() {
+    this.tTO = this._to(function() {
 
       // _randomize the timeout each time, if that's your thing
       this._random(this);
@@ -261,7 +255,7 @@ p.to = function(fn, t) {
       if(string.length) {
         this.type(string, false);
       } else{
-        this.executeQueue();
+        this._executeQueue();
       }
 
     }.bind(this), this.DT);
@@ -279,16 +273,12 @@ p.to = function(fn, t) {
 
   p.print = function(chr) {
     if(this.inTag) {
-
       $(this.tag, this.el).last().append(chr);
-
       if(this.tagCount < this.tagDuration) {
         this.tagCount++;
-
       } else {
         this.inTag = false;
       }
-      
     } else {
       this.insert(chr);
     }
@@ -296,7 +286,7 @@ p.to = function(fn, t) {
 
   p.end = function(t) {
     if(t.s.loop){
-      t.to(function(){
+      t._to(function(){
         t.delete(t);
       }.bind(t), t.s.loopDelay);
     } else {
@@ -310,7 +300,7 @@ p.to = function(fn, t) {
   */
   p.delete = function(characters) {
 
-    this.dTO = this.to(function() {
+    this.dTO = this._to(function() {
 
       // _randomize it 
       this._random();
@@ -377,7 +367,7 @@ p.to = function(fn, t) {
       if (amount > (characters === undefined ? 0 : 2)) {
         this.delete(characters === undefined ? undefined : characters-1);
       } else {
-        this.executeQueue();
+        this._executeQueue();
       }
     }.bind(this), this.DT/3);
   };
