@@ -360,15 +360,13 @@ p.to = function(fn, t) {
 
       // if we've found an empty set of HTML tags...
       console.log(this.tel.html().indexOf('></') > -1);
-      console.log(a.join(''));
+      console.log(this.tel.html());
       console.log('---');
+      
       if(this.tel.html().indexOf('></') > -1) {
-        for (var i = this.tel.html().indexOf('></')-1; i >= 0; i--) {
+        for (var i = this.tel.html().indexOf('></')-2; i >= 0; i--) {
           if(a[i] === '<') {
-            // console.log(i);
-            // console.log(a.splice(i, a.length-i);
             a.splice(i, a.length-i);
-            // console.log(a.join(''));
             break;
           }
         }
