@@ -24,13 +24,13 @@
 
   // $.fn.tiType = function(){
   //   var Instance = this.data('typeit');
-  //   Instance.functionQueue.push(ttype);
+  //   Instance.queue.push(ttype);
   //   return this;
   // };
 
   // $.fn.tiDelete = function(){
   //   var Instance = this.data('typeit');
-  //   Instance.functionQueue.push(tdelete);
+  //   Instance.queue.push(tdelete);
   //   return this;
   // };
 
@@ -72,7 +72,7 @@
       autoStart: e.data('typeitAutostart')
     };
 
-    this.functionQueue = [];
+    this.queue = [];
     this.inTag = false;
     t.s = $.extend({}, t.d, o, t.dd);
     t.el = e;
@@ -94,105 +94,23 @@
 
     for(i = 0; i < t.s.strings.length; i++) {
 
-      this.functionQueue.push([this.type, t.s.strings[i]]);
-      this.functionQueue.push([this.pause, t.s.breakDelay/2]);
+      this.queue.push([this.type, t.s.strings[i]]);
+      this.queue.push([this.pause, t.s.breakDelay/2]);
 
       if(i < (t.s.strings.length - 1)) {
-        this.functionQueue.push([t.s.breakLines ? this.break : this.delete]);
+        this.queue.push([t.s.breakLines ? this.break : this.delete]);
       }
 
-      this.functionQueue.push([this.pause, t.s.breakDelay/2]);
+      this.queue.push([this.pause, t.s.breakDelay/2]);
     }
 
     if(t.s.autoStart) {
-      t.cursor(t);
+      t._cursor(t);
       t._to(function() {
         this._executeQueue();
       }.bind(this), this.s.startDelay);
     }
   }, 
-
-  _executeQueue : function() {
-    if(this.functionQueue.length) {
-      var thisFunction = this.functionQueue.shift();
-      thisFunction[0].bind(this)(thisFunction[1]);
-    } else {
-      this.cb();
-    }
-  }, 
-
-  _valCB : function(t) {
-    t.cb = t.cb === undefined ? function(){return;} : t.cb;
-  }, 
-
-  _to : function(fn, t) {
-    setTimeout(function() {
-      fn();
-    }.bind(t), t);
-  },
-
-  _elCheck : function(t) {
-    if(t.el.html().length > 0) {
-      t.s.strings = t.el.html().trim();
-    }
-  }, 
-
-  _toArray : function(string) {
-    return string.constructor === Array ? string.slice(0) : string.split('<br>');
-  },
-
-  cursor : function(t) {
-    if(t.s.cursor) {
-      t.el.append('<i class="c">|</i>');
-      var s = t.s.cursorSpeed;
-      (function loop() {
-        t.el.find('.c').fadeTo(s/2, 0).fadeTo(s/2, 1);
-        t._to(loop, s);
-      })();
-    }
-  },
-
-  _random : function() {
-    var s = this.s.speed;
-    var r = s/2;
-    this.DT = this.s.lifeLike ? Math.abs(Math.random() * ((s+r) - (s-r)) + (s-r)) : s;
-  }, 
-
-  /*
-  Convert each string in the array to a sub-array. While happening, search the subarrays for HTML tags. 
-  When a complete tag is found, slice the subarray to get the complete tag, insert it at the correct index, 
-  and delete the range of indexes where the indexed tag used to be.
-  */
-  _rake : function(array) {
-
-    for(var i = 0; i < array.length; i++) {
-      array[i] = array[i].split('');
-
-      if(this.s.html) {
-        this.tPos = [];
-        var p = this.tPos;
-        var tag;
-        var en = false;
-        for(var j = 0; j < array[i].length; j++) {
-
-          if(array[i][j] === '<' || array[i][j] === '&') {
-            p[0] = j;
-            en = array[i][j] === '&' ? true : false;
-          }
-
-          if(array[i][j] === '>' || (array[i][j] === ';' && en)) {
-            p[1] = j;
-            j = 0;
-            tag = (array[i].slice(p[0], p[1]+1)).join('');
-            array[i].splice(p[0], (p[1]-p[0]+1), tag);
-            en = false;
-          }
-        }
-      }
-    }
-
-    return array;
-  },
 
   /*
     Pass in a string, and loop over that string until empty. Then return true.
@@ -217,7 +135,7 @@
       // _randomize the timeout each time, if that's your thing
       this._random(this);
 
-      // "print" the stringacter 
+      // "_print" the stringacter 
       // if an opening HTML tag is found and we're not already pringing inside a tag
       if((string[0].indexOf('<') !== -1 && string[0].indexOf('</') === -1) && (!this.inTag)){
 
@@ -231,7 +149,7 @@
 
         this._makeNode(string[0]);
       } else {
-        this.print(string[0]);
+        this._print(string[0]);
       }
 
       // shorten it
@@ -247,11 +165,11 @@
     }.bind(this), this.DT);
   },
 
-  pause : function(duration) {
-    duration = duration === undefined || duration === null ? this.s.breakDelay : duration;
+  pause : function(time) {
+    time = time === undefined || time === null ? this.s.breakDelay : time;
     this._to(function() {
       this._executeQueue();
-    }.bind(this), duration);
+    }.bind(this), time);
   },
 
   break : function() {
@@ -259,17 +177,7 @@
     this._executeQueue();
   },
 
-  /*
-    Get the start & ending positions of the string inside HTML opening & closing angle brackets, 
-    and then create a DOM element of that string/tag name.
-  */
-  _makeNode : function(char) {
-    this.tag = $($.parseHTML(char));
-    this.print(this.tag);
-    this.inTag = true;
-  },
-
-  print : function(chr) {
+  _print : function(chr) {
     if(this.inTag) {
       $(this.tag, this.el).last().append(chr);
       if(this.tagCount < this.tagDuration) {
@@ -279,16 +187,6 @@
       }
     } else {
       this.insert(chr);
-    }
-  },
-
-  end : function(t) {
-    if(t.s.loop){
-      t._to(function(){
-        t.delete(t);
-      }.bind(t), t.s.loopDelay);
-    } else {
-      t.cb();
     }
   },
 
@@ -364,7 +262,115 @@
         this._executeQueue();
       }
     }.bind(this), this.DT/3);
+  },
+
+  /* 
+    Is this deprecated? 
+  */
+  _end : function(t) {
+    if(t.s.loop){
+      t._to(function(){
+        t.delete(t);
+      }.bind(t), t.s.loopDelay);
+    } else {
+      t.cb();
+    }
+  },
+
+  /* 
+    Advance the function queue to execute the next function after the previous one has finished.
+  */
+  _executeQueue : function() {
+    if(this.queue.length) {
+      var thisFunction = this.queue.shift();
+      thisFunction[0].bind(this)(thisFunction[1]);
+    } else {
+      this.cb();
+    }
+  }, 
+
+  _valCB : function(t) {
+    t.cb = t.cb === undefined ? function(){return;} : t.cb;
+  }, 
+
+  _to : function(fn, t) {
+    setTimeout(function() {
+      fn();
+    }.bind(t), t);
+  },
+
+  _elCheck : function(t) {
+    if(t.el.html().length > 0) {
+      t.s.strings = t.el.html().trim();
+    }
+  }, 
+
+  _toArray : function(str) {
+    return str.constructor === Array ? str.slice(0) : str.split('<br>');
+  },
+
+  _cursor : function(t) {
+    if(t.s.cursor) {
+      t.el.append('<span class="c">|</span>');
+      var s = t.s.cursorSpeed;
+      (function loop() {
+        t.el.find('.c').fadeTo(s/2, 0).fadeTo(s/2, 1);
+        t._to(loop, s);
+      })();
+    }
+  },
+
+  _random : function() {
+    var s = this.s.speed;
+    var r = s/2;
+    this.DT = this.s.lifeLike ? Math.abs(Math.random() * ((s+r) - (s-r)) + (s-r)) : s;
+  }, 
+
+  /*
+  Convert each string in the array to a sub-array. While happening, search the subarrays for HTML tags. 
+  When a complete tag is found, slice the subarray to get the complete tag, insert it at the correct index, 
+  and delete the range of indexes where the indexed tag used to be.
+  */
+  _rake : function(array) {
+
+    for(var i = 0; i < array.length; i++) {
+      array[i] = array[i].split('');
+
+      if(this.s.html) {
+        this.tPos = [];
+        var p = this.tPos;
+        var tag;
+        var en = false;
+        for(var j = 0; j < array[i].length; j++) {
+
+          if(array[i][j] === '<' || array[i][j] === '&') {
+            p[0] = j;
+            en = array[i][j] === '&' ? true : false;
+          }
+
+          if(array[i][j] === '>' || (array[i][j] === ';' && en)) {
+            p[1] = j;
+            j = 0;
+            tag = (array[i].slice(p[0], p[1]+1)).join('');
+            array[i].splice(p[0], (p[1]-p[0]+1), tag);
+            en = false;
+          }
+        }
+      }
+    }
+
+    return array;
+  },
+
+  /*
+    Get the start & ending positions of the string inside HTML opening & closing angle brackets, 
+    and then create a DOM element of that string/tag name.
+  */
+  _makeNode : function(char) {
+    this.tag = $($.parseHTML(char));
+    this._print(this.tag);
+    this.inTag = true;
   }
- };
+};
 
 }(jQuery));

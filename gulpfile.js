@@ -16,7 +16,7 @@ gulp.task('jshint',function(){
 // minify JavaScript and put it into /dist
 gulp.task('scripts', function() {
   gulp.src('src/typeit.js')
-    //.pipe(uglify())
+    .pipe(uglify())
     .pipe(rename('typeit.min.js'))
     .pipe(gulp.dest('dist'));
 
