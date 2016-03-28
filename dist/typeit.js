@@ -10,7 +10,7 @@
 
   $.fn.typeIt = function(opt, cb){
    return this.each(function(){
-     $(this).data("typeit", new $.fn.typeIt.tClass($(this), opt, cb));
+     $(this).data("typeit", new $.typeIt($(this), opt, cb));
    });
   };
 
@@ -35,7 +35,7 @@
   // };
 
   // Accepts element, options, and callback function.
-  $.fn.typeIt.tClass = function(e, o, c) {
+  $.typeIt = function(e, o, c) {
     var t = this;
 
     t.d = {
@@ -73,17 +73,19 @@
     };
 
     this.queue = [];
+    this.queueIndex = 0;
     this.inTag = false;
     t.s = $.extend({}, t.d, o, t.dd);
     t.el = e;
-    t.cb = c; 
-    t._valCB(t);
-    t._elCheck(t);   
+    t.cb = c;   
     t.init(t, o);
   };
 
- $.fn.typeIt.tClass.prototype = {
+ $.typeIt.prototype = {
+
   init : function(t) {
+    t._valCB(t);
+    t._elCheck(t); 
     t.span = '<span style="display:inline-block;width:0;height:0;overflow:hidden;">_</span>';
     this.s.strings = this._toArray(this.s.strings);
     t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
@@ -265,27 +267,20 @@
   },
 
   /* 
-    Is this deprecated? 
-  */
-  _end : function(t) {
-    if(t.s.loop){
-      t._to(function(){
-        t.delete(t);
-      }.bind(t), t.s.loopDelay);
-    } else {
-      t.cb();
-    }
-  },
-
-  /* 
     Advance the function queue to execute the next function after the previous one has finished.
   */
   _executeQueue : function() {
-    if(this.queue.length) {
-      var thisFunction = this.queue.shift();
-      thisFunction[0].bind(this)(thisFunction[1]);
+    if(this.queueIndex < this.queue.length) {
+      var thisFunc = this.queue[this.queueIndex];
+      this.queueIndex++;
+      thisFunc[0].bind(this)(thisFunc[1]);
     } else {
-      this.cb();
+      if(this.s.loop) {
+        this.queueIndex = 0;
+        this.delete();
+      } else {
+        this.cb();
+      }
     }
   }, 
 
