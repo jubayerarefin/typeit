@@ -82,79 +82,66 @@
     t.init(t, o);
   };
 
- var p = $.fn.typeIt.tClass.prototype;
+ $.fn.typeIt.tClass.prototype = {
+  init : function(t) {
+    t.span = '<span style="display:inline-block;width:0;height:0;overflow:hidden;">_</span>';
+    this.s.strings = this._toArray(this.s.strings);
+    t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
+    t.tel = t.el.find('span');
+    t.insert = function(c) { 
+      t.tel.append(c);
+    };
 
- p.init = function(t){
-  t.span = '<span style="display:inline-block;width:0;height:0;overflow:hidden;">_</span>';
-  this.s.strings = this._toArray(this.s.strings);
-  t.el.html('<span style="display:inline;position:relative;font:inherit;"></span>');
-  t.tel = t.el.find('span');
-  t.insert = function(c) { 
-    t.tel.append(c);
-  };
+    for(i = 0; i < t.s.strings.length; i++) {
 
-  for(i = 0; i < t.s.strings.length; i++) {
+      this.functionQueue.push([this.type, t.s.strings[i]]);
+      this.functionQueue.push([this.pause, t.s.breakDelay/2]);
 
-    this.functionQueue.push([this.type, t.s.strings[i]]);
-    this.functionQueue.push([this.pause, t.s.breakDelay/2]);
+      if(i < (t.s.strings.length - 1)) {
+        this.functionQueue.push([t.s.breakLines ? this.break : this.delete]);
+      }
 
-    if(i < (t.s.strings.length - 1)) {
-      this.functionQueue.push([t.s.breakLines ? this.break : this.delete]);
+      this.functionQueue.push([this.pause, t.s.breakDelay/2]);
     }
 
-    this.functionQueue.push([this.pause, t.s.breakDelay/2]);
-  }
-
-  if(t.s.autoStart) {
+    if(t.s.autoStart) {
       t.cursor(t);
       t._to(function() {
         this._executeQueue();
       }.bind(this), this.s.startDelay);
     }
-  };
+  }, 
 
-  p._executeQueue = function() {
-      if(this.functionQueue.length) {
-        var thisFunction = this.functionQueue.shift();
-        thisFunction[0].bind(this)(thisFunction[1]);
-      } else {
-        this.cb();
-      }
-   };
+  _executeQueue : function() {
+    if(this.functionQueue.length) {
+      var thisFunction = this.functionQueue.shift();
+      thisFunction[0].bind(this)(thisFunction[1]);
+    } else {
+      this.cb();
+    }
+  }, 
 
-  p.pause = function(duration) {
-    duration = duration === undefined || duration === null ? this.s.breakDelay : duration;
-    this._to(function() {
-      this._executeQueue();
-    }.bind(this), duration);
-  };
-
-  p.break = function() {
-    this.insert('<br>');
-    this._executeQueue();
-  };
-
-  p._valCB = function(t) {
+  _valCB : function(t) {
     t.cb = t.cb === undefined ? function(){return;} : t.cb;
-  };
+  }, 
 
-  p._to = function(fn, t) {
+  _to : function(fn, t) {
     setTimeout(function() {
       fn();
     }.bind(t), t);
-  };
+  },
 
-  p._elCheck = function(t) {
+  _elCheck : function(t) {
     if(t.el.html().length > 0) {
       t.s.strings = t.el.html().trim();
     }
-  };
+  }, 
 
-  p._toArray = function(string) {
+  _toArray : function(string) {
     return string.constructor === Array ? string.slice(0) : string.split('<br>');
-  };
+  },
 
-  p.cursor = function(t) {
+  cursor : function(t) {
     if(t.s.cursor) {
       t.el.append('<i class="c">|</i>');
       var s = t.s.cursorSpeed;
@@ -163,20 +150,20 @@
         t._to(loop, s);
       })();
     }
-  };
+  },
 
-  p._random = function() {
+  _random : function() {
     var s = this.s.speed;
     var r = s/2;
     this.DT = this.s.lifeLike ? Math.abs(Math.random() * ((s+r) - (s-r)) + (s-r)) : s;
-  };
+  }, 
 
- /*
+  /*
   Convert each string in the array to a sub-array. While happening, search the subarrays for HTML tags. 
   When a complete tag is found, slice the subarray to get the complete tag, insert it at the correct index, 
   and delete the range of indexes where the indexed tag used to be.
   */
-  p._rake = function(array) {
+  _rake : function(array) {
 
     for(var i = 0; i < array.length; i++) {
       array[i] = array[i].split('');
@@ -205,13 +192,12 @@
     }
 
     return array;
-  };
+  },
 
-  /* new functions! */
   /*
     Pass in a string, and loop over that string until empty. Then return true.
   */
-  p.type = function(string, rake){
+  type : function(string, rake){
 
     // set default 'rake' value
     rake = typeof rake === 'undefined' ? true : rake;
@@ -259,19 +245,31 @@
       }
 
     }.bind(this), this.DT);
-  };
+  },
+
+  pause : function(duration) {
+    duration = duration === undefined || duration === null ? this.s.breakDelay : duration;
+    this._to(function() {
+      this._executeQueue();
+    }.bind(this), duration);
+  },
+
+  break : function() {
+    this.insert('<br>');
+    this._executeQueue();
+  },
 
   /*
     Get the start & ending positions of the string inside HTML opening & closing angle brackets, 
     and then create a DOM element of that string/tag name.
   */
-  p._makeNode = function(char) {
+  _makeNode : function(char) {
     this.tag = $($.parseHTML(char));
     this.print(this.tag);
     this.inTag = true;
-  };
+  },
 
-  p.print = function(chr) {
+  print : function(chr) {
     if(this.inTag) {
       $(this.tag, this.el).last().append(chr);
       if(this.tagCount < this.tagDuration) {
@@ -282,9 +280,9 @@
     } else {
       this.insert(chr);
     }
-  };
+  },
 
-  p.end = function(t) {
+  end : function(t) {
     if(t.s.loop){
       t._to(function(){
         t.delete(t);
@@ -292,23 +290,20 @@
     } else {
       t.cb();
     }
-  };
+  },
 
-  /*
+    /*
     If show cursor is enabled, move array starting point for the for loop back one,
     so that the loop will not find the closing tag and delete the cursor.
   */
-  p.delete = function(characters) {
+  delete : function(characters) {
 
     this.dTO = this._to(function() {
 
-      // _randomize it 
       this._random();
 
-      // the current content
       var a = this.tel.html().split("");
 
-      // the amount we want to delete
       var amount = characters === undefined || characters === null ? a.length-1 : characters + 1;
 
       // cut the array by a character
@@ -360,7 +355,6 @@
         }
       }
       
-      // repopulate the element
       this.tel.html(a.join(''));
 
       // Characters still in the string.
@@ -370,6 +364,7 @@
         this._executeQueue();
       }
     }.bind(this), this.DT/3);
-  };
+  }
+ };
 
 }(jQuery));
