@@ -25,7 +25,7 @@
 
     <section>
 
-       <span id="typeItBox">this is a test!<br> and <strong>here</strong> is one more.</span>
+       <span id="typeItBox"></span>
 
     </section>
 
@@ -34,16 +34,18 @@
     <script src="../dist/typeit.min.js"></script>
 
     <script>
-      $('#typeItBox').typeIt({
-      strings: '<i>one</i> <strong>two</strong>',
-      speed: 500,
-      breakLines: true,
-      startDelay: 1000,
-      breakDelay: 3000,
-      loop: true
-    }, function() {
-      console.log('callback!');
-    });
+    //   $('#typeItBox').typeIt({
+    //   strings: '<i>one</i> <strong>two</strong>',
+    //   speed: 500,
+    //   breakLines: true,
+    //   startDelay: 1000,
+    //   breakDelay: 3000,
+    //   loop: true
+    // }, function() {
+    //   console.log('callback!');
+    // });
+
+  $('#typeItBox').typeIt().tiType('test string!').tiDelete(1);
 
    //  var el = $('#typeItBox').data('typeit');
    // el.delete(3);

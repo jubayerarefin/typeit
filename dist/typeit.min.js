@@ -10,29 +10,21 @@
 
   $.fn.typeIt = function(opt, cb){
    return this.each(function(){
-     $(this).data("typeit", new $.typeIt($(this), opt, cb));
+     $(this).data('typeit', new $.typeIt($(this), opt, cb));
    });
   };
 
-  // function ttype() {
-  //   console.log('ttype!');
-  // }
+  $.fn.tiType = function(str){
+    var Instance = this.data('typeit');
+    Instance.queue.push([Instance.type, str]);
+    return this;
+  };
 
-  // function tdelete() {
-  //   console.log('tdelete');
-  // }
-
-  // $.fn.tiType = function(){
-  //   var Instance = this.data('typeit');
-  //   Instance.queue.push(ttype);
-  //   return this;
-  // };
-
-  // $.fn.tiDelete = function(){
-  //   var Instance = this.data('typeit');
-  //   Instance.queue.push(tdelete);
-  //   return this;
-  // };
+  $.fn.tiDelete = function(num){
+    var Instance = this.data('typeit');
+    Instance.queue.push([Instance.delete, num]);
+    return this;
+  };
 
   // Accepts element, options, and callback function.
   $.typeIt = function(e, o, c) {
@@ -327,7 +319,6 @@
   and delete the range of indexes where the indexed tag used to be.
   */
   _rake : function(array) {
-
     for(var i = 0; i < array.length; i++) {
       array[i] = array[i].split('');
 
