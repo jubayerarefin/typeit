@@ -15,13 +15,20 @@
   };
 
   $.fn.tiType = function(str){
-    var Instance = this.data('typeit');
+    if($(this).data('typeit') === undefined) {
+      $(this).data('typeit', new $.typeIt($(this)));
+      $(this).data('typeit').s.strings = [];
+    }
+    var Instance = $(this).data('typeit');
     Instance.queue.push([Instance.type, str]);
     return this;
   };
 
   $.fn.tiDelete = function(num){
-    var Instance = this.data('typeit');
+    if($(this).data('typeit') === undefined) {
+      $(this).data('typeit', new $.typeIt($(this)));
+    }
+    var Instance = $(this).data('typeit');
     Instance.queue.push([Instance.delete, num]);
     return this;
   };
