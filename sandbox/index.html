@@ -10,6 +10,10 @@
         display: block;
       }
 
+      .test-class {
+        display: inline-block;
+      }
+
 /*      .c {
         font-weight: 800;
         font-size: 35px;
@@ -31,9 +35,9 @@
 
     <script>
       $('#typeItBox').typeIt({
-      strings: ['<i>one</i> <strong>two</strong>', 'and more'],
+      strings: ['<i>one</i> <strong>two</strong>', 'and <h1 class="test-class">more</h1>'],
       speed: 300,
-      breakLines: true,
+      breakLines: false,
       startDelay: 1000,
       breakDelay: 3000
     }, function() {

@@ -5,6 +5,7 @@
 - [Setup](#setup)
 - [Usage](#usage)
 - [Options](#options)
+- [Limitations](#limitations)
 - [Contributions](#contributions)
 
 ### Description
@@ -57,7 +58,6 @@ You're ready to start typing!
 ## Usage
 
 ### Calling TypeIt on Your Site
-
 You can modify the options for the plugin in two different ways -- either by inserting them directly into the function call, or by using data-* attributes.
 
 #### About Using Settings Object
@@ -129,7 +129,7 @@ By default, multiple strings will stack on top of each other (breakLines = true)
   });
 ```
 ### Handling HTML Tags
-TypeIt will handle HTML tags in your strings, as long as they're only one level deep: 
+TypeIt will handle HTML tags in your strings, as long as they're only one level deep and are `inline` elements: 
 
 ```js
   // GOOD! :)
@@ -185,6 +185,12 @@ There are a number of options you may use to customize typeIt.
 | loopDelay    | The amount of time between looping over a string or set of strings again.  | 750  |
 | html    | Handle strings as HTML, which will process tags and HTML entities. If 'false,' strings will be typed literally.  | true  |
 
+## Limitations
+TypeIt is an constantly improving work in progress. Because of that, certain limitations are going to exist. Some have some workarounds you can easily implement yourself; others do not. Here are a few obvious limitations: 
+
+- By default, the cursor is italicized (because it's wrapped in `<i>` tags). Until this is updated, just style it on your own by targeting the `.c` class. 
+- There's currently no way to start with text on the screen and begin to delete it. Instead, the element must always start with no text. 
+- As of the latest release, there's no way to pause and delay typing at a given time. There are workarounds to this, but until a future release addresses it, it can be a limitation.
 
 ## Contributions
 
