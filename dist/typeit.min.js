@@ -8,37 +8,19 @@
 
  (function($, undefined){
 
-  $.fn.typeIt = function(opt, cb){
+  $.fn.typeIt = function(opt, cb, defStr){
    return this.each(function(){
-     $(this).data('typeit', new $.typeIt($(this), opt, cb));
+     $(this).data('typeit', new $.typeIt($(this), opt, cb, defStr));
    });
   };
 
-  $.fn.tiType = function(str){
-    if($(this).data('typeit') === undefined) {
-      $(this).data('typeit', new $.typeIt($(this)));
-      $(this).data('typeit').s.strings = [];
-    }
-    var Instance = $(this).data('typeit');
-    Instance.queue.push([Instance.type, str]);
-    return this;
-  };
-
-  $.fn.tiDelete = function(num){
-    if($(this).data('typeit') === undefined) {
-      $(this).data('typeit', new $.typeIt($(this)));
-    }
-    var Instance = $(this).data('typeit');
-    Instance.queue.push([Instance.delete, num]);
-    return this;
-  };
-
   // Accepts element, options, and callback function.
-  $.typeIt = function(e, o, c) {
+  $.typeIt = function(el, opt, cb, defStr) {
     var t = this;
+    defStr = (defStr === undefined) ? 'Your default string.' : defStr;
 
     t.d = {
-      strings: 'Your default string.',
+      strings: defStr,
       speed: 100,
       lifeLike: true,
       cursor: true,
@@ -55,34 +37,34 @@
      };
 
     t.dd = {
-      strings: e.data('typeitStrings'),
-      speed: e.data('typeitSpeed'),
-      lifeLike: e.data('typeitLifelike'),
-      cursor: e.data('typeitCursor'),
-      cursorSpeed: e.data('typeitCursorspeed'),
-      breakLines: e.data('typeitBreaklines'),
-      breakDelay: e.data('typeitBreakdelay'),
-      startDelay: e.data('typeitStartdelay'),
-      preStringPause: e.data('typeitPrestringpause'),
-      postStringPause: e.data('typeitPoststringpause'),
-      loop: e.data('typeitLoop'),
-      loopDelay: e.data('typeitLoopdelay'),
-      html: e.data('typeitHtml'),
-      autoStart: e.data('typeitAutostart')
+      strings: el.data('typeitStrings'),
+      speed: el.data('typeitSpeed'),
+      lifeLike: el.data('typeitLifelike'),
+      cursor: el.data('typeitCursor'),
+      cursorSpeed: el.data('typeitCursorspeed'),
+      breakLines: el.data('typeitBreaklines'),
+      breakDelay: el.data('typeitBreakdelay'),
+      startDelay: el.data('typeitStartdelay'),
+      preStringPause: el.data('typeitPrestringpause'),
+      postStringPause: el.data('typeitPoststringpause'),
+      loop: el.data('typeitLoop'),
+      loopDelay: el.data('typeitLoopdelay'),
+      html: el.data('typeitHtml'),
+      autoStart: el.data('typeitAutostart')
     };
 
     this.queue = [];
     this.queueIndex = 0;
     this.inTag = false;
-    t.s = $.extend({}, t.d, o, t.dd);
-    t.el = e;
-    t.cb = c;   
-    t.init(t, o);
+    t.s = $.extend({}, t.d, opt, t.dd);
+    t.el = el;
+    t.cb = cb;   
+    t._init(t, opt);
   };
 
  $.typeIt.prototype = {
 
-  init : function(t) {
+  _init : function(t) {
     t._valCB(t);
     t._elCheck(t); 
     t.span = '<span style="display:inline-block;width:0;height:0;overflow:hidden;">_</span>';
@@ -284,7 +266,7 @@
   }, 
 
   _valCB : function(t) {
-    t.cb = t.cb === undefined ? function(){return;} : t.cb;
+    t.cb = t.cb === undefined || t.cb === null ? function(){return;} : t.cb;
   }, 
 
   _to : function(fn, t) {
@@ -366,4 +348,26 @@
   }
 };
 
+$.fn.tiType = function(str){
+
+  if($(this).data('typeit') === undefined) {
+    $(this).data('typeit', new $.typeIt($(this), {}, null, []));
+  }
+  var Instance = $(this).data('typeit');
+  Instance.queue.push([Instance.type, str]);
+  return this;
+};
+
+$.fn.tiDelete = function(num){
+  
+  if($(this).data('typeit') === undefined) {
+    $(this).data('typeit', new $.typeIt($(this)));
+  }
+  var Instance = $(this).data('typeit');
+  Instance.queue.push([Instance.delete, num]);
+  return this;
+};
+
 }(jQuery));
+
+
