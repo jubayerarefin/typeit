@@ -348,23 +348,24 @@
   }
 };
 
-$.fn.tiType = function(str){
-
-  if($(this).data('typeit') === undefined) {
-    $(this).data('typeit', new $.typeIt($(this), {}, null, []));
+$.createInst = function(el) {
+  el = $(el);
+  if(el.data('typeit') === undefined) {
+    el.data('typeit', new $.typeIt(el, {}, null, []));
   }
-  var Instance = $(this).data('typeit');
-  Instance.queue.push([Instance.type, str]);
+};
+
+$.fn.tiType = function(str){
+  $.createInst(this);
+  var Inst = $(this).data('typeit');
+  Inst.queue.push([Inst.type, str]);
   return this;
 };
 
 $.fn.tiDelete = function(num){
-  
-  if($(this).data('typeit') === undefined) {
-    $(this).data('typeit', new $.typeIt($(this)));
-  }
-  var Instance = $(this).data('typeit');
-  Instance.queue.push([Instance.delete, num]);
+  $.createInst(this);
+  var Inst = $(this).data('typeit');
+  Inst.queue.push([Inst.delete, num]);
   return this;
 };
 
