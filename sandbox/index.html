@@ -34,21 +34,10 @@
     <script src="../dist/typeit.min.js"></script>
 
     <script>
-    //   $('#typeItBox').typeIt({
-    //   strings: '<i>one</i> <strong>two</strong>',
-    //   speed: 500,
-    //   breakLines: true,
-    //   startDelay: 1000,
-    //   breakDelay: 3000,
-    //   loop: true
-    // }, function() {
-    //   console.log('callback!');
-    // });
 
-  $('#typeItBox').tiType('test <strong>string!</strong>').tiDelete(5);
-
-   //  var el = $('#typeItBox').data('typeit');
-   // el.delete(3);
+    $('#typeItBox').tiType('test <strong>string!</strong>')
+      .tiPause(2000)
+      .tiType('... well, I guess I am just <strong>testing</strong>');
 
     </script>
 

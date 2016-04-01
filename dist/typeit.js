@@ -184,12 +184,11 @@
       this._random();
 
       var a = this.tel.html().split("");
-      console.log(a);
 
       var amount = characters === undefined || characters === null ? a.length-1 : characters + 1;
 
       // cut the array by a character
-      for (var n = amount; n > -1; n--) {
+      for (var n = a.length-1; n > -1; n--) {
 
         if((a[n] === '>' || a[n] === ';') && this.s.html) {
           for(var o = n; o > -1; o--) {
@@ -216,7 +215,6 @@
                 }
 
                 a.splice(o-1, 1);
-                //this.delCount++;
                 break;
               }
             }
@@ -274,10 +272,10 @@
     t.cb = t.cb === undefined || t.cb === null ? function(){return;} : t.cb;
   }, 
 
-  _to : function(fn, t) {
+  _to : function(fn, time) {
     setTimeout(function() {
       fn();
-    }.bind(t), t);
+    }.bind(this), time);
   },
 
   _elCheck : function(t) {
@@ -371,6 +369,20 @@ $.fn.tiDelete = function(num){
   $.createInst(this);
   var Inst = $(this).data('typeit');
   Inst.queue.push([Inst.delete, num]);
+  return this;
+};
+
+$.fn.tiPause = function(time){
+  $.createInst(this);
+  var Inst = $(this).data('typeit');
+  Inst.queue.push([Inst.pause, time]);
+  return this;
+};
+
+$.fn.tiBreak = function(){
+  $.createInst(this);
+  var Inst = $(this).data('typeit');
+  Inst.queue.push([Inst.break]);
   return this;
 };
 
