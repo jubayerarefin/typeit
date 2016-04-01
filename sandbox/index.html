@@ -35,7 +35,11 @@
 
     <script>
 
-    $('#typeItBox').tiType('test <strong>string!</strong>')
+    $('#typeItBox').typeIt({
+      strings: [],
+      speed: 50
+      })
+      .tiType('test <strong>string!</strong>')
       .tiPause(2000)
       .tiType('... well, I guess I am just <strong>testing</strong>');
 

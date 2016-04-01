@@ -305,6 +305,10 @@
     this.DT = this.s.lifeLike ? Math.abs(Math.random() * ((s+r) - (s-r)) + (s-r)) : s;
   }, 
 
+  _mergeSettings : function(settings) {
+
+  },
+
   /*
   Convert each string in the array to a sub-array. While happening, search the subarrays for HTML tags. 
   When a complete tag is found, slice the subarray to get the complete tag, insert it at the correct index, 
@@ -384,6 +388,13 @@ $.fn.tiBreak = function(){
   var Inst = $(this).data('typeit');
   Inst.queue.push([Inst.break]);
   return this;
+};
+
+$.fn.tiSettings = function(settings) {
+    $.createInst(this);
+    var Inst = $(this).data('typeit');
+    Inst.queue.push([Inst.mergeSettings], settings);
+    return this;
 };
 
 }(jQuery));
