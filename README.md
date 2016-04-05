@@ -1,5 +1,10 @@
 # TypeIt: A jQuery Animated Typing Plugin
 
+
+TypeIt is the most versatile, user-friendly animated typing plugin on the planet. By a simple function call, it allows you to type single or multiple strings that break lines, delete & replace each other, and it even handles HTML tags &amp; entities. 
+
+For more advanced, controlled typing effects, TypeIt comes with companion functions that can be chained to control your typing down to the smallest character, enabling you to type not just a few strings of text, but an entire narrative, with complete control over speed, characters, everything.
+
 **Table of Contents**
 - [Choose a License](#choose-a-license)
 - [Setup](#setup)
@@ -8,17 +13,16 @@
 - [Limitations](#limitations)
 - [Contributions](#contributions)
 
-### Description
-A lightweight jQuery plugin that outputs text like it's being typed. It allows you to type single strings, multiple strings that stack, multiple strings that delete & replace each other, and even HTML tags &amp; entities. You can also loop strings or sets of strings continuously.
-
 ### Some of the Perks
-* Capable of looping your string(s).
+* Start typing only when your element is in the viewport. 
+* Loop your string(s).
 * Features JavaScript fallback / SEO optimization option for your strings.
 * Multiple easy ways to set up & initialize.
-* Capable of handling several unique instances on a single page.
-* By default, handles HTML tags (including your custom classes, ID's, etc.) with ease.
+* Handle several unique instances on a single page.
+* Handle HTML tags (including your custom classes, ID's, etc.) and entities with ease.
+* Includes companion functions that can be chained for fine tuning your typing. 
 * Supported by jQuery 1.8.0 or higher.
-* Lightweight. (~3.5kb, single JavaScript file)
+* Lightweight. (< 5kb, single JavaScript file)
 
 ### Demo
 Checkout several demos and a sandbox where you can try it out at <a href="http://macarthur.me/typeit">macarthur.me/typeit</a>.
