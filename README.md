@@ -9,6 +9,7 @@
 - [Setup](#setup)
 - [Simple Usage](#simple-usage)
 - [Advanced Usage (Chaining Companion Functions)](#advanced-usage)
+- [About HTML Handling](#about-html-handling)
 - [Options](#options)
 - [Limitations](#limitations)
 - [Contributions](#contributions)
@@ -19,18 +20,18 @@
 
 TypeIt is the most versatile, user-friendly animated typing plugin on the planet. In simple use, it allows you to type single or multiple strings that break lines, delete & replace each other, and it even handles HTML tags &amp; entities. 
 
-For more advanced, controlled typing effects, TypeIt comes with companion functions that can be chained to control your typing down to the smallest character, enabling you to type not just a few strings of text, but an entire narrative, with complete control over speed, characters, everything.
+For more advanced, controlled typing effects, TypeIt comes with companion functions that can be chained to control your typing down to the smallest character, enabling you to type not just a few strings of text, but an entire narrative, with complete control over speed, characters, line breaks, pausing, everything.
 
-### The Perks
+### Some Included Perks
 * Start typing only when your element is in the viewport. 
 * Loop your string(s).
 * Features JavaScript fallback / SEO optimization option for your strings.
 * Multiple easy ways to set up & initialize.
-* Handle several unique instances on a single page.
+* Create several unique instances on a single page.
 * Handle HTML tags (including your custom classes, ID's, etc.) and entities with ease.
-* Includes companion functions that can be chained for fine tuning your typing. 
+* Use companion functions to chain individual commands together for fine tuning your typing. 
 * Supported by jQuery 1.8.0 or higher.
-* Lightweight. (< 5kb, single JavaScript file)
+* Lightweight. (< Xkb, single JavaScript file)
 
 ### Demos
 Checkout several demos and a sandbox where you can try it out at <a href="http://macarthur.me/typeit">macarthur.me/typeit</a>.
@@ -69,6 +70,8 @@ You're ready to start typing!
 
 ## Simple Usage
 
+In it's simplest use, just call `typeIt()` on any element and include your [options](#options). Out of the box, you're ready to type.
+
 ### Typing Multiple Strings
 
 Aside from simply typing a single string, you can configure TypeIt to type multiple strings. If you define your strings within your HTML element, just separate them with `<br>` tags:
@@ -92,7 +95,9 @@ By default, multiple strings will stack on top of each other (breakLines = true)
     breakLines: false
   });
 ```
-### Handling HTML Tags
+
+## About HTML Handling
+
 TypeIt will handle HTML tags in your strings, as long as they're only one level deep and are `inline` elements: 
 
 ```js
@@ -119,18 +124,6 @@ And it'll also handle HTML entities:
 
 To disable all HTML rendering, set 'html' to false.
 
-### Using a Callback Function
-
-TypeIt allows you to use a custom callback function when you've completed typing. To use one, simply add it as the second argument when it's initialized. **Note: if you've enabled `loop`, this is useless.**
-
-```js
-  $('.typeit-box').typeIt({
-    strings: 'Here is a string!',
-  }, function() {
-    console.log('This is your callback function!');
-  });
-```
-
 ## Options
 
 You can modify the options for the plugin in two different ways -- either by inserting them directly into the function call, or by using data-* attributes.
@@ -139,7 +132,7 @@ You can modify the options for the plugin in two different ways -- either by ins
 * When using a single string, you can just wrap it in quotation marks (or in an array; it doesn't matter). 
 * When using multiple strings, it's recommended that you place them in an array (Ex: `strings: ['String #1','String #2']`). You can optionally place them in quotation marks, separated by `<br>` tags, however.
 
-Example:
+Example:s
 
   ```html
    <span class="type-it"></span>
