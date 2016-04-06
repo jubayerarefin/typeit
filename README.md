@@ -1,19 +1,27 @@
 # TypeIt: A jQuery Animated Typing Plugin
+*The most versatile jQuery animated typing plugin on the planet.*
 
+---
 
-TypeIt is the most versatile, user-friendly animated typing plugin on the planet. By a simple function call, it allows you to type single or multiple strings that break lines, delete & replace each other, and it even handles HTML tags &amp; entities. 
-
-For more advanced, controlled typing effects, TypeIt comes with companion functions that can be chained to control your typing down to the smallest character, enabling you to type not just a few strings of text, but an entire narrative, with complete control over speed, characters, everything.
-
-**Table of Contents**
+### Table of Contents
+- [Overview](#overview)
 - [Choose a License](#choose-a-license)
 - [Setup](#setup)
-- [Usage](#usage)
+- [Simple Usage](#simple-usage)
+- [Advanced Usage (Chaining Companion Functions)](#advanced-usage)
 - [Options](#options)
 - [Limitations](#limitations)
 - [Contributions](#contributions)
 
-### Some of the Perks
+---
+
+## Overview
+
+TypeIt is the most versatile, user-friendly animated typing plugin on the planet. In simple use, it allows you to type single or multiple strings that break lines, delete & replace each other, and it even handles HTML tags &amp; entities. 
+
+For more advanced, controlled typing effects, TypeIt comes with companion functions that can be chained to control your typing down to the smallest character, enabling you to type not just a few strings of text, but an entire narrative, with complete control over speed, characters, everything.
+
+### The Perks
 * Start typing only when your element is in the viewport. 
 * Loop your string(s).
 * Features JavaScript fallback / SEO optimization option for your strings.
@@ -24,7 +32,7 @@ For more advanced, controlled typing effects, TypeIt comes with companion functi
 * Supported by jQuery 1.8.0 or higher.
 * Lightweight. (< 5kb, single JavaScript file)
 
-### Demo
+### Demos
 Checkout several demos and a sandbox where you can try it out at <a href="http://macarthur.me/typeit">macarthur.me/typeit</a>.
 
 ## Choose a License
@@ -44,70 +52,22 @@ Get it from this repo, or from the following sources:
 
 ### Prepare to Initialize on Your Site
 
-1. Create an empty HTML element to select. (If you want to have a fallback for users without JavaScript, you can put a string or strings right into this element. More on that later.)
-
-  ```html
-  <span class="type-it"></span>
-  ```
-
-2. Load jQuery and typeit.js on your page.
+1. Load jQuery and typeit.js on your page.
 
   ```html
   <script src="jquery-2.1.4.min.js"></script>
   <script src="typeit.js"></script>
   ```
+  
+2. Create an empty HTML element to select. (If you want to have a fallback for users without JavaScript, you can put a string or strings right into this element. More on that later.)
+
+  ```html
+  <span class="type-it"></span>
+  ```
 
 You're ready to start typing!
 
-## Usage
-
-### Calling TypeIt on Your Site
-You can modify the options for the plugin in two different ways -- either by inserting them directly into the function call, or by using data-* attributes.
-
-#### About Using Settings Object
-* When using a single string, you can just wrap it in quotation marks (or in an array; it doesn't matter). 
-* When using multiple strings, it's recommended that you place them in an array (Ex: `strings: ['String #1','String #2']`). You can optionally place them in quotation marks, separated by `<br>` tags, however.
-
-Example:
-
-  ```html
-   <span class="type-it"></span>
-  ```
-
- ```js
-  $('.type-it').typeIt({
-    strings: 'Enter your string here!',
-    speed: 300,
-    lifeLike: false,
-    cursor: true
-  });
-  ```
-
-#### About Using Data-* Attributes
-* Make sure the names are all lowercase. 
-* When using multiple strings, wrap your array of strings inside single quotation marks. Ex: `data-typeit-strings='["string #1", "string #2"]'`
-
-Example:
-
-  ```html
-  <span class="type-it"
-  data-typeit-strings="A new string to type."
-  data-typeit-speed="100"
-  data-typeit-lifelike="true"
-  data-typeit-cursor="true">
-
-  </span>
-  ```
-
-  ```js
-  $('.type-it').typeIt();
-  ```
-
-You can also define what to type a third way -- by simply filling the element with a string or strings of text. This is convenient because if a user doesn't have JavaScript enabled, they'll still be able to read the text, and the text will be available for SEO purposes. **Note: by default, the plugin will use the string that's in the element. If strings are defined either in the function call or data-* attributes, they will be overridden.**
-
-  ```html
-  <span class="type-it">This is the string that will be typed.</span> 
-  ```
+## Simple Usage
 
 ### Typing Multiple Strings
 
@@ -172,6 +132,53 @@ TypeIt allows you to use a custom callback function when you've completed typing
 ```
 
 ## Options
+
+You can modify the options for the plugin in two different ways -- either by inserting them directly into the function call, or by using data-* attributes.
+
+#### About Using Settings Object
+* When using a single string, you can just wrap it in quotation marks (or in an array; it doesn't matter). 
+* When using multiple strings, it's recommended that you place them in an array (Ex: `strings: ['String #1','String #2']`). You can optionally place them in quotation marks, separated by `<br>` tags, however.
+
+Example:
+
+  ```html
+   <span class="type-it"></span>
+  ```
+
+ ```js
+  $('.type-it').typeIt({
+    strings: 'Enter your string here!',
+    speed: 300,
+    lifeLike: false,
+    cursor: true
+  });
+  ```
+
+#### About Using Data-* Attributes
+* Make sure the names are all lowercase. 
+* When using multiple strings, wrap your array of strings inside single quotation marks. Ex: `data-typeit-strings='["string #1", "string #2"]'`
+
+Example:
+
+  ```html
+  <span class="type-it"
+  data-typeit-strings="A new string to type."
+  data-typeit-speed="100"
+  data-typeit-lifelike="true"
+  data-typeit-cursor="true">
+
+  </span>
+  ```
+
+  ```js
+  $('.type-it').typeIt();
+  ```
+
+You can also define what to type a third way -- by simply filling the element with a string or strings of text. This is convenient because if a user doesn't have JavaScript enabled, they'll still be able to read the text, and the text will be available for SEO purposes. **Note: by default, the plugin will use the string that's in the element. If strings are defined either in the function call or data-* attributes, they will be overridden.**
+
+  ```html
+  <span class="type-it">This is the string that will be typed.</span> 
+  ```
 
 There are a number of options you may use to customize typeIt.
 
