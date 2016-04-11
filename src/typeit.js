@@ -160,6 +160,12 @@
     this._executeQueue();
   },
 
+  mergeSet : function(s) {
+    // this.s = $.extend({}, this.s, s);
+    // console.log('hi');
+    this._executeQueue();
+  },
+
   _print : function(chr) {
     if(this.inTag) {
       $(this.tag, this.el).last().append(chr);
@@ -256,6 +262,7 @@
   _executeQueue : function() {
     if(this.queueIndex < this.queue.length) {
       var thisFunc = this.queue[this.queueIndex];
+      console.log(this.queue);
       this.queueIndex++;
       thisFunc[0].bind(this)(thisFunc[1]);
     } else {
@@ -302,12 +309,9 @@
   _random : function() {
     var s = this.s.speed;
     var r = s/2;
+    console.log(this.DT);
     this.DT = this.s.lifeLike ? Math.abs(Math.random() * ((s+r) - (s-r)) + (s-r)) : s;
   }, 
-
-  _mergeSettings : function(settings) {
-
-  },
 
   /*
   Convert each string in the array to a sub-array. While happening, search the subarrays for HTML tags. 
@@ -355,7 +359,7 @@
   }
 };
 
-$.createInst = function(el) {
+$.create = function(el) {
   el = $(el);
   if(el.data('typeit') === undefined) {
     el.data('typeit', new $.typeIt(el, {}, null, []));
@@ -363,37 +367,37 @@ $.createInst = function(el) {
 };
 
 $.fn.tiType = function(str){
-  $.createInst(this);
-  var Inst = $(this).data('typeit');
-  Inst.queue.push([Inst.type, str]);
+  $.create(this);
+  var i = $(this).data('typeit');
+  i.queue.push([i.type, str]);
   return this;
 };
 
 $.fn.tiDelete = function(num){
-  $.createInst(this);
-  var Inst = $(this).data('typeit');
-  Inst.queue.push([Inst.delete, num]);
+  $.create(this);
+  var i = $(this).data('typeit');
+  i.queue.push([i.delete, num]);
   return this;
 };
 
 $.fn.tiPause = function(time){
-  $.createInst(this);
-  var Inst = $(this).data('typeit');
-  Inst.queue.push([Inst.pause, time]);
+  $.create(this);
+  var i = $(this).data('typeit');
+  i.queue.push([i.pause, time]);
   return this;
 };
 
 $.fn.tiBreak = function(){
-  $.createInst(this);
-  var Inst = $(this).data('typeit');
-  Inst.queue.push([Inst.break]);
+  $.create(this);
+  var i = $(this).data('typeit');
+  i.queue.push([i.break]);
   return this;
 };
 
 $.fn.tiSettings = function(settings) {
-    $.createInst(this);
-    var Inst = $(this).data('typeit');
-    Inst.queue.push([Inst.mergeSettings], settings);
+    $.create(this);
+    var i = $(this).data('typeit');
+    i.queue.push([i.mergeSet, settings]);
     return this;
 };
 

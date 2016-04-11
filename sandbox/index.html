@@ -37,10 +37,14 @@
 
     $('#typeItBox').typeIt({
       strings: [],
-      speed: 50
+      speed: 100
       })
-      .tiType('test <strong>string!</strong>')
-      .tiPause(2000)
+      .tiType('... well, I guess I am just <strong>testing</strong>')
+      .tiBreak()
+      .tiSettings({speed: 300})
+      .tiType('... well, I guess I am just <strong>testing</strong>')
+      .tiBreak()
+      .tiSettings({speed: 900})
       .tiType('... well, I guess I am just <strong>testing</strong>');
 
     </script>
