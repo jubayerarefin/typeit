@@ -1,210 +1,76 @@
-# TypeIt: A jQuery Animated Typing Plugin
+# TypeIt
 
-**Table of Contents**
-- [Choose a License](#choose-a-license)
-- [Setup](#setup)
-- [Usage](#usage)
-- [Options](#options)
-- [Limitations](#limitations)
-- [Contributions](#contributions)
+The Most Versatile JavaScript Animated Typing Utility on the Planet
 
-### Description
-A lightweight jQuery plugin that outputs text like it's being typed. It allows you to type single strings, multiple strings that stack, multiple strings that delete & replace each other, and even HTML tags &amp; entities. You can also loop strings or sets of strings continuously.
+[![Build Status](https://travis-ci.org/alexmacarthur/typeit.svg?branch=master)](https://travis-ci.org/alexmacarthur/typeit)
+[![npm downloads](https://img.shields.io/npm/dm/typeit.svg?style=flat-square)](http://npm-stat.com/charts.html?package=typeit)
+[![](https://data.jsdelivr.com/v1/package/npm/typeit/badge)](https://www.jsdelivr.com/package/npm/typeit)
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Falexmacarthur%2Ftypeit&via=amacarthur&text=Check%20out%20TypeIt%2C%20the%20most%20versatile%20JavaScript%20animated%20typing%20utility%20on%20the%20planet.&hashtags=js%2Cwebdev%2Coss)
 
-### Some of the Perks
-* Capable of looping your string(s).
-* Features JavaScript fallback / SEO optimization option for your strings.
-* Multiple easy ways to set up & initialize.
-* Capable of handling several unique instances on a single page.
-* By default, handles HTML tags (including your custom classes, ID's, etc.) with ease.
-* Supported by jQuery 1.8.0 or higher.
-* Lightweight. (~3.5kb, single JavaScript file)
+<p align="center">
+    <img src="demo.gif" alt="" style="border: 5px solid #24292e;">
+</p>
 
-### Demo
-Checkout several demos and a sandbox where you can try it out at <a href="http://macarthur.me/typeit">macarthur.me/typeit</a>.
+## Overview
 
-## Choose a License
-To get started, first select a license: 
-* Personal - [FREE](#setup)
-* Single Commercial License - [Purchase Here](http://www.uplabs.com/posts/typeit-a-jquery-animated-typing-plugin)
-* Extended Commercial License - [Purchase Here](http://www.uplabs.com/posts/typeit-a-jquery-animated-typing-plugin)
+TypeIt is the most versatile JavaScript typewriter effect utility on the planet. With its simple yet flexible configuration, you're empowerd to type single or multiple strings that break lines, delete & replace each other, easily handle string containing HTML, loop, and a whole lot more.
 
-## Setup
+For more advanced, controlled typing effects, TypeIt comes with companion functions that can be chained to control your typing down to a single character or millisecond, enabling you to type an dynamic narrative, with complete reign over speed changes, line breaks, deletions, and pauses.
 
-### Download the Plugin
+## Key Features
 
-Get it from this repo, or from the following sources: 
+-   Choose to start typing only when your target element becomes visible on the screen.
+-   Loop your string(s) continuously.
+-   Define your strings via an options object or in the HTML (a useful fallback in case user doesn't have JavaScript enabled, as well as for SEO).
+-   Use a single TypeIt instance to target several different elements on a page.
+-   Handle HTML (even nested tags!) with ease, preserving all of its attributes (classes, ids, etc.).
+-   Use companion functions to chain individual commands together to fine tune your typing.
+-   Ready to be included via JS module, or as a separate script loaded on your page (both "legacy" and modern bundles are provided).
+-   No dependencies!
 
-* <strong><a href="https://www.jsdelivr.com/projects/jquery.typeit">CDN:</a></strong> Include  `https://cdn.jsdelivr.net/jquery.typeit/3.0.1/typeit.min.js` on your page.
-* <strong><a href="https://www.npmjs.com/package/typeit">npm:</a></strong> Install with `npm install typeit`.
+## License Options
 
-### Prepare to Initialize on Your Site
+Using TypeIt for an open source or personal project is completely free. To use it in a commercial project, purchase a single license, or an unlimited license that'll never expire, no matter how many times you use it.
 
-1. Create an empty HTML element to select. (If you want to have a fallback for users without JavaScript, you can put a string or strings right into this element. More on that later.)
+-   Personal or Open Source - [FREE, go install it!](https://typeitjs.com/docs/#installation)
+-   Single Commercial License - [Purchase Here](https://typeitjs.com#license)
+-   Extended Commercial License - [Purchase Here](https://typeitjs.com#license)
 
-  ```html
-  <span class="type-it"></span>
-  ```
+## Demos
 
-2. Load jQuery and typeit.js on your page.
+See some more examples and try out the sandbox at [https://typeitjs.com](https://typeitjs.com).
 
-  ```html
-  <script src="jquery-2.1.4.min.js"></script>
-  <script src="typeit.js"></script>
-  ```
+## Documentation
 
-You're ready to start typing!
+All of TypeIt's documentation can be found at [https://typeitjs.com/docs](https://typeitjs.com/docs).
 
-## Usage
+## Browser Support
 
-### Calling TypeIt on Your Site
+Bundles exist for browsers that support ES2015+ (which accounts for a [very strong majority](https://caniuse.com/#feat=es6-class) of users), as well as for those that do not. If you're using IE11 or older, you'll also need the following polyfills:
 
-You can modify the options for the plugin in two different ways -- either by inserting them directly into the function call, or by using data-* attributes.
+-   `Array.prototype.fill`
+-   `IntersectionObserver`
+-   `Object.assign`
+-   `Promise`
 
-#### About Using Settings Object
-* When using a single string, you can just wrap it in quotation marks (or in an array; it doesn't matter). 
-* When using multiple strings, it's recommended that you place them in an array (Ex: `strings: ['String #1','String #2']`). You can optionally place them in quotation marks, separated by `<br>` tags, however.
+You can load all of these yourself, or just use the following pre-made bundle from [Polyfill.io](https://polyfill.io):
 
-Example:
-
-  ```html
-   <span class="type-it"></span>
-  ```
-
- ```js
-  $('.type-it').typeIt({
-    strings: 'Enter your string here!',
-    speed: 300,
-    lifeLike: false,
-    cursor: true
-  });
-  ```
-
-#### About Using Data-* Attributes
-* Make sure the names are all lowercase. 
-* When using multiple strings, wrap your array of strings inside single quotation marks. Ex: `data-typeit-strings='["string #1", "string #2"]'`
-
-Example:
-
-  ```html
-  <span class="type-it"
-  data-typeit-strings="A new string to type."
-  data-typeit-speed="100"
-  data-typeit-lifelike="true"
-  data-typeit-cursor="true">
-
-  </span>
-  ```
-
-  ```js
-  $('.type-it').typeIt();
-  ```
-
-You can also define what to type a third way -- by simply filling the element with a string or strings of text. This is convenient because if a user doesn't have JavaScript enabled, they'll still be able to read the text, and the text will be available for SEO purposes. **Note: by default, the plugin will use the string that's in the element. If strings are defined either in the function call or data-* attributes, they will be overridden.**
-
-  ```html
-  <span class="type-it">This is the string that will be typed.</span> 
-  ```
-
-### Typing Multiple Strings
-
-Aside from simply typing a single string, you can configure TypeIt to type multiple strings. If you define your strings within your HTML element, just separate them with `<br>` tags:
-
-  ```html
-  <span class="type-it">Here is a string. <br>And here is another!</span> 
-  ```
-If they're defined in the settings object, it's possible to put them inside quotation marks separated by `<br>` tags, but it's recommended that you use an array:
-
-```js
-  $('.type-it').typeIt({
-    strings: ['Enter your string here!', 'Another string!']
-  });
+```html
+<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.fill%2CIntersectionObserver%2CObject.assign%2CPromise"></script>
 ```
 
-By default, multiple strings will stack on top of each other (breakLines = true). However, you can also set them to delete and replace each other:
+## Contribute
 
-```js
-  $('.type-it').typeIt({
-    strings: ['Enter your string here!', 'Another string!'],
-    breakLines: false
-  });
-```
-### Handling HTML Tags
-TypeIt will handle HTML tags in your strings, as long as they're only one level deep: 
+Please do! The code is available on Github. Check out the [CONTRIBUTING.md](https://github.com/alexmacarthur/typeit/blob/master/CONTRIBUTING.md) file to see how to get started.
 
-```js
-  // GOOD! :)
-  $('.typeit-box').typeIt({
-    strings: '<h1 class="your-class">This is a string!</h1>',
-  }
-```
+## Know of a Neat Site Using TypeIt?
 
-```js
-  // BAD! :(
-  $('.typeit-box').typeIt({
-    strings: '<h1 class="your-class"><span>This is a string!</span></h1>',
-  }
-```
+I'd love to see and share it! [Send me a message](https://macarthur.me/contact) or [tweet at me.](https://www.twitter.com/amacarthur)
 
-And it'll also handle HTML entities: 
+## Need Help?
 
-```js
-  $('.typeit-box').typeIt({
-    strings: '<h1 class="your-class">One thing &amp; another!<h1>',
-  }
-```
+If you're working with a custom implementation of TypeIt and would like some help, I'm available for hire. [Get in touch!](https://macarthur.me/contact)
 
-To disable all HTML rendering, set 'html' to false.
+## License
 
-### Using a Callback Function
-
-TypeIt allows you to use a custom callback function when you've completed typing. To use one, simply add it as the second argument when it's initialized. **Note: if you've enabled `loop`, this is useless.**
-
-```js
-  $('.typeit-box').typeIt({
-    strings: 'Here is a string!',
-  }, function() {
-    console.log('This is your callback function!');
-  });
-```
-
-## Options
-
-There are a number of options you may use to customize typeIt.
-
-| Option        | Description   | Default Value
-| ------------- | ------------- | ------------- |
-| strings  | The string(s) to be typed.       | 'Your default string.' |
-| speed     | The typing speed.             | 100  |
-| lifeLike      | Will make the typing pace irregular, as if a real person is doing it.  | true |
-| cursor    | Show a blinking cursor at the end of the string(s).  | true  |
-| cursorSpeed    | The blinking speed of the cursor.  | 1000  |
-| breakLines    | Choose whether you want multiple strings to be printed on top of each other (breakLines = true), or if you want each string to be deleted and replaced by the next one (breakLines = false).  | true  |
-| breakDelay    | The amount of time between typing multiple strings.  | 750  |
-| startDelay    | The amount of time before the plugin begins typing after initalizing.  | 250  |
-| loop    | Have your string or strings continuously loop after completing.  | false  |
-| loopDelay    | The amount of time between looping over a string or set of strings again.  | 750  |
-| html    | Handle strings as HTML, which will process tags and HTML entities. If 'false,' strings will be typed literally.  | true  |
-
-## Limitations
-TypeIt is an constantly improving work in progress. Because of that, certain limitations are going to exist. Some have some workarounds you can easily implement yourself; others do not. Here are a few obvious limitations: 
-
-- By default, the cursor is italicized (because it's wrapped in `<i>` tags). Until this is updated, just style it on your own by targeting the `.c` class. 
-- There's currently no way to start with text on the screen and begin to delete it. Instead, the element must always start with no text. 
-- As of the latest release, there's no way to pause and delay typing at a given time. There are workarounds to this, but until a future release addresses it, it can be a limitation. 
-
-## Contributions
-
-Gulp is configured to check & minify the JavaScript. In the root of the repo, use these commands to run these default tasks and watch for file changes (make sure Node.js, npm, and Gulp are installed on your computer):
-
-```
-npm install
-gulp
-```
-## Donate
-
-If I've made your life eaiser in some way by creating this thing and want to kick a small "thank you" my way, I'd very much appreciate it! 
-
-PayPal: <a href="http://paypal.me/alexmacarthur">paypal.me/alexmacarthur</a>
-
-Venmo: <a href="https://venmo.com/amacarthur">venmo.com/amacarthur</a>
+[GPL-2.0](https://github.com/alexmacarthur/typeit/blob/master/LICENSE) © Alex MacArthur
