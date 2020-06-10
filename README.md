@@ -8,7 +8,7 @@ The Most Versatile JavaScript Animated Typing Utility on the Planet
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Falexmacarthur%2Ftypeit&via=amacarthur&text=Check%20out%20TypeIt%2C%20the%20most%20versatile%20JavaScript%20animated%20typing%20utility%20on%20the%20planet.&hashtags=js%2Cwebdev%2Coss)
 
 <p align="center">
-    <img src="demo.gif" alt="" style="border: 5px solid #24292e;">
+    <img src="readme-demo.gif" alt="" style="border: 5px solid #24292e;">
 </p>
 
 ## Overview
@@ -32,9 +32,8 @@ For more advanced, controlled typing effects, TypeIt comes with companion functi
 
 Using TypeIt for an open source or personal project is completely free. To use it in a commercial project, purchase a single license, or an unlimited license that'll never expire, no matter how many times you use it.
 
--   Personal or Open Source - [FREE, go install it!](https://typeitjs.com/docs/#installation)
--   Single Commercial License - [Purchase Here](https://typeitjs.com#license)
--   Extended Commercial License - [Purchase Here](https://typeitjs.com#license)
+-   Single Commercial License - [Purchase Here](https://typeitjs.com/checkout/limited)
+-   Extended Commercial License - [Purchase Here](https://typeitjs.com/checkout/unlimited)
 
 ## Demos
 
@@ -44,20 +43,9 @@ See some more examples and try out the sandbox at [https://typeitjs.com](https:/
 
 All of TypeIt's documentation can be found at [https://typeitjs.com/docs](https://typeitjs.com/docs).
 
-## Browser Support
+## Looking for a React Component?
 
-Bundles exist for browsers that support ES2015+ (which accounts for a [very strong majority](https://caniuse.com/#feat=es6-class) of users), as well as for those that do not. If you're using IE11 or older, you'll also need the following polyfills:
-
--   `Array.prototype.fill`
--   `IntersectionObserver`
--   `Object.assign`
--   `Promise`
-
-You can load all of these yourself, or just use the following pre-made bundle from [Polyfill.io](https://polyfill.io):
-
-```html
-<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.fill%2CIntersectionObserver%2CObject.assign%2CPromise"></script>
-```
+Check out the official [React component for TypeIt](https://github.com/alexmacarthur/typeit-react) here.
 
 ## Contribute
 

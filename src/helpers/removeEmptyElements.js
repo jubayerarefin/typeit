@@ -1,66 +1,27 @@
 import removeNode from "./removeNode";
-import nodeCollectionToArray from "./nodeCollectionToArray";
+import toArray from "./toArray";
 
 /**
- * Check if a given character node is empty, either containing nothing or an empty HTML element.
- *
- * @param {object} node
- * @return {boolean}
- */
-export const characterIsEmpty = node => {
-  // It's a text node. Leave it be.
-  // Or, break tags are an exception.
-  if (node.nodeType === 3 || node.tagName === "BR") {
-    return false;
-  }
-
-  // If there's no first child, this is empty!
-  return !node.firstChild;
-};
-
-/**
- * Check if array of nodes contains any empty characters.
- *
- * @param {array} nodes
- * @return {boolean}
- */
-export const containsEmptyCharacter = nodes => {
-  return nodes.some(node => {
-    return characterIsEmpty(node);
-  });
-};
-
-/**
- * Given a DOM scope and selector, remove any HTML element remnants.
+ * Given a DOM scope and selector, remove any HTML element remnants,
+ * EXCEPT for <br> tags, which may be typed but do not have any text content.
  *
  * @param {object} scope
  * @param {string} selector
  * @return {void}
  */
 export default node => {
-  let allHTMLNodes = nodeCollectionToArray(node.querySelectorAll("*"));
-  let hasEmptyNodes = containsEmptyCharacter(allHTMLNodes);
+  toArray(node.querySelectorAll("*")).forEach(i => {
+    if (!i.innerHTML && i.tagName !== "BR") {
+      let nodeToRemove = i;
 
-  while (allHTMLNodes.length && hasEmptyNodes) {
-    let shouldRequery = false;
-
-    allHTMLNodes.forEach(char => {
-      if (characterIsEmpty(char)) {
-        removeNode(char);
-        shouldRequery = true;
+      while (
+        nodeToRemove.parentNode.childNodes.length === 1 &&
+        nodeToRemove.parentNode.childNodes[0].isEqualNode(nodeToRemove)
+      ) {
+        nodeToRemove = nodeToRemove.parentNode;
       }
-    });
 
-    // Re-query, since we just removed nodes.
-    // Conditionally do this, to avoid unnecessary queries.
-    if (shouldRequery) {
-      allHTMLNodes = nodeCollectionToArray(node.querySelectorAll("*"));
+      removeNode(nodeToRemove);
     }
-
-    // Removing nodes might have created new empty nodes,
-    // so we need to re-query and check again.
-    hasEmptyNodes = containsEmptyCharacter(allHTMLNodes);
-  }
-
-  return allHTMLNodes;
+  });
 };

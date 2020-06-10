@@ -1,7 +1,7 @@
 import TypeIt from "../../src/TypeIt";
 
 test("Generates a queue correctly.", () => {
-  document.body.innerHTML = `<div>'
+  setHTML`<div>'
       <span id="element"></span>
     </div>`;
 
@@ -9,13 +9,11 @@ test("Generates a queue correctly.", () => {
     strings: ["Taxation is...", "theft."]
   }).go();
 
-  instance.instances.forEach(instance => {
-    expect(instance.queue).toMatchSnapshot();
-  });
+  expect(instance.getQueue().getItems()).toMatchSnapshot();
 });
 
 test("Generates a queue correctly when chaining upon instantiation.", () => {
-  document.body.innerHTML = `<div>'
+  setHTML`<div>'
       <span id="element"></span>
     </div>`;
 
@@ -25,13 +23,11 @@ test("Generates a queue correctly when chaining upon instantiation.", () => {
     .type("Second string.")
     .go();
 
-  instance.instances.forEach(instance => {
-    expect(instance.queue.waiting).toHaveLength(29);
-  });
+  expect(instance.getQueue().getItems()).toHaveLength(35);
 });
 
 test("Generates correct `nextStringDelay`.", () => {
-  document.body.innerHTML = `<div>'
+  setHTML`<div>'
       <span id="element"></span>
     </div>`;
 
@@ -40,7 +36,7 @@ test("Generates correct `nextStringDelay`.", () => {
     strings: ["Free markets...", "win."]
   }).go();
 
-  let nextStringDelay = instance1.instances[0].opts.nextStringDelay;
+  let nextStringDelay = instance1.getOptions().nextStringDelay;
 
   expect(typeof nextStringDelay).toBe("object");
   expect(nextStringDelay.before).toBe(250);
@@ -52,7 +48,7 @@ test("Generates correct `nextStringDelay`.", () => {
     strings: ["Free markets...", "win."]
   }).go();
 
-  nextStringDelay = instance2.instances[0].opts.nextStringDelay;
+  nextStringDelay = instance2.getOptions().nextStringDelay;
 
   expect(nextStringDelay.before).toBe(150);
   expect(nextStringDelay.after).toBe(400);
@@ -60,7 +56,7 @@ test("Generates correct `nextStringDelay`.", () => {
 });
 
 test("Generates correct `loopDelay`.", () => {
-  document.body.innerHTML = `<div>'
+  setHTML`<div>'
       <span id="element"></span>
     </div>`;
 
@@ -69,7 +65,7 @@ test("Generates correct `loopDelay`.", () => {
     strings: ["Free markets...", "win."]
   }).go();
 
-  let loopDelay = instance1.instances[0].opts.loopDelay;
+  let loopDelay = instance1.getOptions().loopDelay;
 
   expect(loopDelay.before).toBe(375);
   expect(loopDelay.after).toBe(375);
@@ -80,7 +76,7 @@ test("Generates correct `loopDelay`.", () => {
     strings: ["Free markets...", "win."]
   }).go();
 
-  loopDelay = instance2.instances[0].opts.loopDelay;
+  loopDelay = instance2.getOptions().loopDelay;
 
   expect(typeof loopDelay).toBe("object");
   expect(loopDelay.before).toBe(3000);
@@ -89,7 +85,7 @@ test("Generates correct `loopDelay`.", () => {
 });
 
 test("Removes empty HTML when necessary.", () => {
-  document.body.innerHTML = `<div>'
+  setHTML`<div>'
       <span id="element"></span>
     </div>`;
 
